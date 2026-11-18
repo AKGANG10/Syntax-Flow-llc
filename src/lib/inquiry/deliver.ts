@@ -49,6 +49,7 @@ const kindLabel: Record<Inquiry["kind"], string> = {
   technology: "Technology inquiry",
   talent: "Talent request",
   both: "Technology + Talent inquiry",
+  transformation: "Transformation inquiry",
   candidate: "Talent network sign-up",
 };
 
@@ -84,6 +85,7 @@ export function summarize(inq: Inquiry, reference: string, submittedAt: string) 
       );
       break;
     case "both":
+    case "transformation":
       rows.push(
         ["Company", inq.company],
         ["Areas", inq.areas.map((a) => labelFor(areaOptions, a)).join(", ")],

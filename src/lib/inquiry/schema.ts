@@ -39,15 +39,21 @@ const meta = {
   elapsedMs: z.number().int().nonnegative().max(1000 * 60 * 60 * 24),
 };
 
+// Business inquiries: the core question, name and email are required (plus
+// company for talent). Everything else is optional detail that helps routing.
+const areas = z.array(z.enum(values(areaOptions))).max(areaOptions.length).optional().default([]);
+const timeline = z.enum(values(timelineOptions), "Choose a timeline from the list.").optional();
+const headcount = z.enum(values(headcountOptions), "Choose how many people from the list.").optional();
+
 const technology = z.object({
   kind: z.literal("technology"),
   ...contact,
   ...meta,
   company: optionalText(limits.company),
-  project: detail("Tell us a little about what you want to build (at least 10 characters)."),
-  areas: z.array(z.enum(values(areaOptions))).max(areaOptions.length).optional().default([]),
-  timeline: z.enum(values(timelineOptions), "Choose a timeline."),
-  budget: z.enum(values(budgetOptions)).optional(),
+  project: detail("Tell us a little about what you are building (at least 10 characters)."),
+  areas,
+  timeline,
+  budget: z.enum(values(budgetOptions), "Choose a budget range from the list.").optional(),
   industry: optionalText(limits.short),
 });
 
@@ -57,22 +63,26 @@ const talent = z.object({
   ...meta,
   company: text(limits.company, "Enter your company name."),
   roles: detail("Describe the role or team you need (at least 10 characters)."),
-  headcount: z.enum(values(headcountOptions), "Choose how many people you need."),
-  engagement: z.enum(values(hiringEngagementOptions), "Choose an engagement type."),
+  headcount,
+  engagement: z.enum(values(hiringEngagementOptions), "Choose an engagement type from the list.").optional(),
   location: optionalText(limits.short),
-  timeline: z.enum(values(timelineOptions), "Choose a timeline."),
+  timeline,
 });
 
-const both = z.object({
-  kind: z.literal("both"),
-  ...contact,
-  ...meta,
-  company: optionalText(limits.company),
-  goal: detail("Tell us what you are trying to accomplish (at least 10 characters)."),
-  areas: z.array(z.enum(values(areaOptions))).max(areaOptions.length).optional().default([]),
-  headcount: z.enum(values(headcountOptions)).optional(),
-  timeline: z.enum(values(timelineOptions), "Choose a timeline."),
-});
+const combined = <K extends "both" | "transformation">(kind: K) =>
+  z.object({
+    kind: z.literal(kind),
+    ...contact,
+    ...meta,
+    company: optionalText(limits.company),
+    goal: detail("Tell us what you are trying to accomplish (at least 10 characters)."),
+    areas,
+    headcount,
+    timeline,
+  });
+
+const both = combined("both");
+const transformation = combined("transformation");
 
 const httpsUrl = z
   .string()
@@ -101,7 +111,7 @@ const candidate = z.object({
   consent: z.literal(true, "Please confirm you have read the privacy notice."),
 });
 
-export const inquirySchema = z.discriminatedUnion("kind", [technology, talent, both, candidate]);
+export const inquirySchema = z.discriminatedUnion("kind", [technology, talent, transformation, both, candidate]);
 export type Inquiry = z.infer<typeof inquirySchema>;
 
 /** Flatten zod issues to { field: firstMessage } for the client. */

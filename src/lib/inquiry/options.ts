@@ -4,7 +4,7 @@
  * This file must stay free of server-only imports.
  */
 
-export const needs = ["technology", "talent", "both"] as const;
+export const needs = ["technology", "talent", "transformation", "both"] as const;
 export type Need = (typeof needs)[number];
 
 export const areaOptions = [

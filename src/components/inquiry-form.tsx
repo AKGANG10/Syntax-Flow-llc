@@ -197,21 +197,13 @@ function validate(kind: Kind, d: FormData): Errors {
   if (!EMAIL_RE.test(s("email"))) e.email = "Enter a valid email address.";
   if (s("phone") && !/^[+()\d\s.-]*$/.test(s("phone"))) e.phone = "Use digits, spaces and + ( ) - only.";
 
-  if (kind === "technology") {
-    detail("project", "Tell us a little about what you want to build (at least 10 characters).");
-    req("timeline", "Choose a timeline.");
-  }
+  // Business paths: only the core question, name, email (and company for talent) are required.
+  if (kind === "technology") detail("project", "Tell us a little about what you are building (at least 10 characters).");
   if (kind === "talent") {
-    req("company", "Enter your company name.");
     detail("roles", "Describe the role or team you need (at least 10 characters).");
-    req("headcount", "Choose how many people you need.");
-    req("engagement", "Choose an engagement type.");
-    req("timeline", "Choose a timeline.");
+    req("company", "Enter your company name.");
   }
-  if (kind === "both") {
-    detail("goal", "Tell us what you are trying to accomplish (at least 10 characters).");
-    req("timeline", "Choose a timeline.");
-  }
+  if (kind === "both" || kind === "transformation") detail("goal", "Tell us what you are trying to accomplish (at least 10 characters).");
   if (kind === "candidate") {
     req("location", "Enter your city and state, or country.");
     req("roles", "Tell us which roles you are interested in.");
@@ -232,7 +224,7 @@ function toPayload(kind: Kind, d: FormData, elapsedMs: number) {
     const value = String(v).trim();
     if (value) out[k] = value;
   }
-  if (kind === "technology" || kind === "both") out.areas = d.getAll("areas").map(String);
+  if (kind === "technology" || kind === "both" || kind === "transformation") out.areas = d.getAll("areas").map(String);
   if (kind === "candidate") out.consent = d.get("consent") === "on";
   return out;
 }
@@ -461,11 +453,19 @@ function SubmitRow({ submitting, label }: { submitting: boolean; label: string }
 
 /* ------------------------------------------------------ business inquiry */
 
-const needCards: { value: Need; title: string; text: string }[] = [
-  { value: "technology", title: "I need technology", text: "Build, modernize or secure a system." },
-  { value: "talent", title: "I need talent", text: "Hire specialists or a whole team." },
-  { value: "both", title: "I need both", text: "The solution and the people to run it." },
+const needCards: { value: Need; title: string; text: string; node: string }[] = [
+  { value: "technology", title: "Technology", text: "Build or modernize a system.", node: "bg-flow-500" },
+  { value: "talent", title: "Talent", text: "Hire specialists or a whole team.", node: "border-[2.5px] border-ink-800 bg-white" },
+  { value: "transformation", title: "Transformation", text: "Change systems and ways of working.", node: "border-[2.5px] border-ink-800 bg-flow-200" },
+  { value: "both", title: "Technology + Talent", text: "The solution and the people to run it.", node: "border-[2.5px] border-ink-800 bg-flow-500" },
 ];
+
+const detailLabel: Record<Need, { name: string; label: string; hint: string }> = {
+  technology: { name: "project", label: "What are you building?", hint: "The problem, who it is for, and anything already in place." },
+  talent: { name: "roles", label: "What kind of professional or team do you need?", hint: "Roles, key skills, seniority and anything unusual about the work." },
+  transformation: { name: "goal", label: "What needs to change?", hint: "The systems involved, the team you have today and the outcome you need." },
+  both: { name: "goal", label: "What are you trying to accomplish?", hint: "The business outcome, the system involved and the team you have today." },
+};
 
 export function BusinessInquiryForm() {
   const params = useSearchParams();
@@ -482,12 +482,16 @@ export function BusinessInquiryForm() {
   if (status.state === "success") return <Success status={status} onReset={reset} successRef={successRef} />;
 
   const f = (name: string) => ({ name, prefix, error: errors[name] });
+  const main = detailLabel[need];
+  // Keep optional details open if a server error points inside them.
+  const detailFields = ["timeline", "budget", "industry", "headcount", "engagement", "location", "phone", "areas"];
+  const detailsHaveError = detailFields.some((k) => errors[k]);
 
   return (
     <form ref={formRef} onSubmit={onSubmit} noValidate className="relative space-y-10" aria-label="Business inquiry">
       <fieldset>
-        <legend className="t-label mb-4 text-flow-700">What do you need?</legend>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <legend className="mb-5 text-[clamp(1.5rem,1.2rem+1vw,2rem)] font-extrabold tracking-[-0.03em] text-ink-950">What are you building?</legend>
+        <div className="grid gap-3 sm:grid-cols-2">
           {needCards.map((c) => (
             <label key={c.value} className="cursor-pointer">
               <input
@@ -498,9 +502,12 @@ export function BusinessInquiryForm() {
                 onChange={() => choose(c.value)}
                 className="peer sr-only"
               />
-              <span className="flex h-full flex-col rounded-2xl border border-ink-200 bg-white p-5 transition-[border-color,box-shadow] peer-checked:border-ink-900 peer-checked:shadow-soft peer-checked:ring-1 peer-checked:ring-ink-900 peer-focus-visible:outline-3 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-flow-500 hover:border-ink-400">
-                <span className="font-semibold text-ink-950">{c.title}</span>
-                <span className="mt-1 text-sm text-ink-600">{c.text}</span>
+              <span className="border-flow flex h-full items-start gap-4 rounded-2xl border border-ink-200 bg-white p-5 transition-[border-color,box-shadow,transform] peer-checked:border-ink-900 peer-checked:shadow-soft peer-checked:ring-1 peer-checked:ring-ink-900 peer-focus-visible:outline-3 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-flow-500 hover:-translate-y-0.5 hover:border-ink-400">
+                <span aria-hidden="true" className={cx("mt-1 block size-4 shrink-0 rounded-full", c.node)} />
+                <span>
+                  <span className="block font-semibold text-ink-950">{c.title}</span>
+                  <span className="mt-1 block text-sm text-ink-600">{c.text}</span>
+                </span>
               </span>
             </label>
           ))}
@@ -515,52 +522,40 @@ export function BusinessInquiryForm() {
 
       <ErrorSummary errors={errors} status={status} summaryRef={summaryRef} />
 
-      <Group title="About the work">
-        {need === "technology" && (
-          <>
-            <TextArea {...f("project")} label="What are you trying to build?" required hint="The problem, who it is for, and anything already in place." />
-            <ChoiceChips name="areas" legend="Which areas are involved?" options={areaOptions} prefix={prefix} />
-            <div className="grid gap-6 sm:grid-cols-2">
-              <SelectField {...f("timeline")} label="Timeline" required options={timelineOptions} />
-              <SelectField {...f("budget")} label="Budget range" options={budgetOptions} />
-            </div>
-            <TextField {...f("industry")} label="Industry" maxLength={limits.short} />
-          </>
-        )}
-        {need === "talent" && (
-          <>
-            <TextArea {...f("roles")} label="What kind of professional or team do you need?" required hint="Roles, key skills, seniority and anything unusual about the work." />
-            <div className="grid gap-6 sm:grid-cols-2">
-              <SelectField {...f("headcount")} label="How many people?" required options={headcountOptions} />
-              <SelectField {...f("engagement")} label="Engagement type" required options={hiringEngagementOptions} />
-              <TextField {...f("location")} label="Work location" hint="City, region, or remote." maxLength={limits.short} />
-              <SelectField {...f("timeline")} label="When do you need them?" required options={timelineOptions} />
-            </div>
-          </>
-        )}
-        {need === "both" && (
-          <>
-            <TextArea {...f("goal")} label="What are you trying to accomplish?" required hint="The business outcome, the system involved and the team you have today." />
-            <ChoiceChips name="areas" legend="Which technology areas are involved?" options={areaOptions} prefix={prefix} />
-            <div className="grid gap-6 sm:grid-cols-2">
-              <SelectField {...f("headcount")} label="Team size you expect to need" options={headcountOptions} />
-              <SelectField {...f("timeline")} label="Timeline" required options={timelineOptions} />
-            </div>
-          </>
-        )}
-      </Group>
-
-      <Group title="About you">
+      <div className="space-y-6">
+        <TextArea key={main.name} {...f(main.name)} label={main.label} required hint={main.hint} />
         <div className="grid gap-6 sm:grid-cols-2">
           <TextField {...f("name")} label="Full name" required autoComplete="name" maxLength={limits.name} />
-          <TextField {...f("email")} label="Work email" required type="email" inputMode="email" autoComplete="email" maxLength={limits.email} />
           <TextField {...f("company")} label="Company" required={need === "talent"} autoComplete="organization" maxLength={limits.company} />
+          <TextField {...f("email")} label="Work email" required type="email" inputMode="email" autoComplete="email" maxLength={limits.email} />
           <TextField {...f("phone")} label="Phone" type="tel" inputMode="tel" autoComplete="tel" maxLength={limits.phone} />
         </div>
-      </Group>
+      </div>
+
+      <details className="group/details rounded-2xl bg-paper ring-1 ring-ink-100 open:pb-6" open={detailsHaveError || undefined}>
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl px-5 py-4 font-semibold text-ink-900 [&::-webkit-details-marker]:hidden">
+          <span>
+            Add project details <span className="font-normal text-ink-500">(optional, helps us route you)</span>
+          </span>
+          <svg viewBox="0 0 12 12" aria-hidden="true" className="size-3.5 shrink-0 transition-transform group-open/details:rotate-45">
+            <path d="M6 1.5v9M1.5 6h9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
+        </summary>
+        <div className="space-y-6 px-5 pt-2">
+          {need !== "talent" && <ChoiceChips name="areas" legend="Which areas are involved?" options={areaOptions} prefix={prefix} />}
+          <div className="grid gap-6 sm:grid-cols-2">
+            <SelectField {...f("timeline")} label="Timeline" options={timelineOptions} />
+            {need === "technology" && <SelectField {...f("budget")} label="Budget range" options={budgetOptions} />}
+            {need === "technology" && <TextField {...f("industry")} label="Industry" maxLength={limits.short} />}
+            {need !== "technology" && <SelectField {...f("headcount")} label="How many people?" options={headcountOptions} />}
+            {need === "talent" && <SelectField {...f("engagement")} label="Engagement type" options={hiringEngagementOptions} />}
+            {need === "talent" && <TextField {...f("location")} label="Work location" hint="City, region, or remote." maxLength={limits.short} />}
+          </div>
+        </div>
+      </details>
 
       <Honeypot />
-      <SubmitRow submitting={status.state === "submitting"} label="Send inquiry" />
+      <SubmitRow submitting={status.state === "submitting"} label="Let’s build what’s next" />
     </form>
   );
 }
