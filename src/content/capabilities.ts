@@ -145,14 +145,148 @@ export const talentCapabilities: Capability[] = [
   },
 ];
 
-export const lifecycle = [
-  { step: "Discover", text: "Define the business problem, the constraints and what success should look like." },
-  { step: "Design", text: "Shape the solution, the architecture and a delivery plan you can hold us to." },
-  { step: "Build", text: "Engineer the software, data, AI and integrations." },
-  { step: "Secure", text: "Build security in from the architecture up." },
-  { step: "Staff", text: "Bring in the specialists and teams to deliver and operate it." },
-  { step: "Scale", text: "Grow the platform and the team as demand grows." },
+/** Visual identifier for a solution's mini-visualization (src/components/mini-viz.tsx). */
+export type VizKind = "ai" | "cloud" | "software" | "data" | "transformation" | "security" | "talent" | "managed";
+
+export type Solution = {
+  id: string;
+  title: string;
+  summary: string;
+  details: string[];
+  viz: VizKind;
+  href: string;
+  pillar: "technology" | "talent" | "both";
+};
+
+/** The eight solutions from the redesign brief, one card each. */
+export const solutions: Solution[] = [
+  {
+    id: "ai",
+    title: "AI & Intelligent Automation",
+    summary: "Generative AI, agents and machine learning built into the workflows people already use.",
+    details: ["Generative AI and AI agents", "Machine learning and predictive analytics", "Intelligent workflow automation", "Guardrails, evaluation and human review"],
+    viz: "ai",
+    href: "/solutions/technology#ai",
+    pillar: "technology",
+  },
+  {
+    id: "cloud",
+    title: "Cloud & Infrastructure",
+    summary: "Cloud platforms that deploy reliably, scale on demand and cost what they should.",
+    details: ["Cloud strategy and migration", "AWS, Microsoft Azure and Google Cloud", "Kubernetes and containers", "Infrastructure as code and CI/CD"],
+    viz: "cloud",
+    href: "/solutions/technology#cloud",
+    pillar: "technology",
+  },
+  {
+    id: "software",
+    title: "Software Engineering",
+    summary: "Products, platforms and APIs engineered to be maintained and extended for years.",
+    details: ["Custom and enterprise applications", "SaaS and product engineering", "Web, mobile and API development", "Legacy modernization"],
+    viz: "software",
+    href: "/solutions/technology#software",
+    pillar: "technology",
+  },
+  {
+    id: "data",
+    title: "Data & Analytics",
+    summary: "Data platforms that turn scattered records into decisions people trust.",
+    details: ["Data engineering and integration", "Warehouses and data platforms", "Business intelligence", "Analytics and visualization"],
+    viz: "data",
+    href: "/solutions/technology#data",
+    pillar: "technology",
+  },
+  {
+    id: "transformation",
+    title: "Digital Transformation",
+    summary: "Modernize the systems and the ways of working behind them, together.",
+    details: ["Modernization roadmaps", "Platform and process redesign", "Change and adoption support", "Technology and team planning in one plan"],
+    viz: "transformation",
+    href: "/solutions/transformation",
+    pillar: "both",
+  },
+  {
+    id: "security",
+    title: "Cybersecurity",
+    summary: "Security designed into the architecture from the first diagram, not added at the end.",
+    details: ["Security architecture", "Application and cloud security", "Identity and access management", "Vulnerability management and monitoring"],
+    viz: "security",
+    href: "/solutions/technology#security",
+    pillar: "technology",
+  },
+  {
+    id: "talent",
+    title: "Talent Solutions",
+    summary: "Technical recruiting, IT staffing and complete teams for roles that are hard to fill well.",
+    details: ["Technical and executive recruiting", "Contract, contract-to-hire and direct hire", "Dedicated engineering teams", "Workforce planning"],
+    viz: "talent",
+    href: "/solutions/talent",
+    pillar: "talent",
+  },
+  {
+    id: "managed",
+    title: "Managed Technology Services",
+    summary: "Ongoing operation, support and improvement of the systems you depend on.",
+    details: ["Monitoring and incident response", "Maintenance and upgrades", "Performance and cost reviews", "Specialists on call when you need them"],
+    viz: "managed",
+    href: "/contact?need=technology",
+    pillar: "both",
+  },
+];
+
+/** The signature "Flow" journey. Each step names which side of the company leads. */
+export const flowSteps = [
+  {
+    id: "discover",
+    title: "Discover",
+    lead: "Start with the outcome.",
+    text: "We define the business problem, the people affected, the constraints and what success has to look like before anything is designed.",
+    points: ["Business goals and constraints", "Current systems and team audit"],
+    pillar: "both",
+  },
+  {
+    id: "design",
+    title: "Design",
+    lead: "Shape the solution and the team.",
+    text: "Architecture, delivery plan and the skills it will take are designed together, so the plan you approve is one you can staff.",
+    points: ["Solution architecture", "Team and skills plan"],
+    pillar: "technology",
+  },
+  {
+    id: "build",
+    title: "Build",
+    lead: "Engineer it in the open.",
+    text: "Software, data, AI and integrations delivered in small, reviewed, tested increments you can see working.",
+    points: ["Product and platform engineering", "Security built in"],
+    pillar: "technology",
+  },
+  {
+    id: "connect",
+    title: "Connect",
+    lead: "Bring in the right people.",
+    text: "Specialists, contractors and permanent hires recruited for the system you are building, by people who understand the work.",
+    points: ["Technical recruiting", "Dedicated teams"],
+    pillar: "talent",
+  },
+  {
+    id: "scale",
+    title: "Scale",
+    lead: "Grow capacity on both sides.",
+    text: "The platform scales with demand and the team scales with the roadmap, without starting over with a new vendor.",
+    points: ["Cloud and reliability", "Team extension"],
+    pillar: "both",
+  },
+  {
+    id: "transform",
+    title: "Transform",
+    lead: "Outcomes that last.",
+    text: "Modern systems, a capable team and the knowledge to keep improving: the business moves differently, not just faster.",
+    points: ["Operations and continuous improvement", "Knowledge that stays with you"],
+    pillar: "both",
+  },
 ] as const;
+
+export type FlowStep = (typeof flowSteps)[number];
 
 export const engagementModels = [
   {
@@ -174,6 +308,6 @@ export const engagementModels = [
     name: "Transform",
     headline: "We combine technology and talent.",
     examples: ["Architecture", "Engineering", "Cloud", "Cybersecurity", "Project leadership", "Technical specialists"],
-    cta: { label: "Transform With Us", href: "/contact?need=both" },
+    cta: { label: "Transform With Us", href: "/contact?need=transformation" },
   },
 ] as const;

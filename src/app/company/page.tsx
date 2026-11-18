@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { PhotoFrame } from "@/components/photo-frame";
 import { ButtonLink, ContentPending, Container, CtaBand, PageHero, Section, SectionHeading } from "@/components/ui";
 import { company, formattedAddress } from "@/content/site";
 
@@ -9,11 +10,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/company" },
 };
 
+/** Principles supplied in the redesign brief (2026-11-18). */
 const principles = [
-  { title: "Outcomes before output", text: "We measure success by what changes for your business, not by hours billed or resumes sent." },
-  { title: "Honest about what is hard", text: "If a timeline is unrealistic or a role will be difficult to fill, we say so early." },
-  { title: "Verified, not claimed", text: "We do not publish numbers, logos or testimonials we cannot back up." },
-  { title: "Security from the start", text: "Protecting client and candidate information is part of how we design everything." },
+  { title: "Build with purpose", text: "Every system and every hire starts from the outcome it has to deliver." },
+  { title: "Move with intelligence", text: "Decisions grounded in evidence, engineering judgment and honest trade-offs." },
+  { title: "Design for scale", text: "Architecture, processes and teams that can grow without starting over." },
+  { title: "People first", text: "For clients, candidates and our own team: respect, clarity and follow-through." },
+  { title: "Engineer for tomorrow", text: "Secure, maintainable work that is still an asset years from now." },
 ];
 
 export default function CompanyPage() {
@@ -57,17 +60,19 @@ export default function CompanyPage() {
         </Container>
       </Section>
 
-      <Section aria-labelledby="company-principles">
-        <Container>
-          <SectionHeading id="company-principles" eyebrow="How we work" title="Principles we hold ourselves to." />
-          <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {principles.map((p) => (
-              <li key={p.title} className="reveal rounded-[var(--radius-card)] bg-white p-6 ring-1 ring-ink-100">
-                <h3 className="font-semibold text-ink-950">{p.title}</h3>
-                <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-600">{p.text}</p>
+      <Section tone="ink" aria-labelledby="company-principles" className="noise overflow-hidden">
+        <div aria-hidden="true" className="bg-grid-dark mask-fade-y pointer-events-none absolute inset-0" />
+        <Container className="relative">
+          <SectionHeading id="company-principles" tone="dark" eyebrow="How we work" title="Five principles. Every engagement." />
+          <ol className="mt-14 divide-y divide-white/10 border-y border-white/10">
+            {principles.map((p, i) => (
+              <li key={p.title} className="reveal grid gap-3 py-8 md:grid-cols-[6rem_1.2fr_1fr] md:items-baseline md:gap-8">
+                <span className="font-mono text-sm text-flow-300">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="text-[clamp(1.75rem,1.2rem+2vw,3rem)] leading-none font-extrabold tracking-[-0.04em] text-white">{p.title}</h3>
+                <p className="text-lg leading-relaxed text-ink-300">{p.text}</p>
               </li>
             ))}
-          </ul>
+          </ol>
         </Container>
       </Section>
 
@@ -82,13 +87,26 @@ export default function CompanyPage() {
         </Container>
       </Section>
 
-      <Section aria-labelledby="company-culture">
-        <Container className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-          <SectionHeading id="company-culture" eyebrow="Culture" title="Built by technologists and recruiters, side by side." />
-          <ContentPending
-            title="Culture and team story"
-            note="Supply the team's real working culture: how technology and talent teams collaborate, where people work, and what it is like to join."
-          />
+      <Section aria-labelledby="company-culture" className="overflow-hidden">
+        <Container>
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
+            <div>
+              <SectionHeading id="company-culture" eyebrow="Culture" title="Built by technologists and recruiters, side by side." />
+              <ContentPending
+                className="mt-10"
+                title="Culture and team story"
+                note="Supply the team's real working culture: how technology and talent teams collaborate, where people work, and what it is like to join."
+              />
+              <ContentPending className="mt-4" title="Company timeline" note="Founding date and verified milestones, in order. Nothing is shown until real dates are supplied." />
+            </div>
+            <div className="grid grid-cols-5 gap-4">
+              <PhotoFrame name="office" fallback="managed" className="col-span-5 aspect-[16/10] rounded-[2.5rem_0.75rem_2.5rem_2.5rem]" sizes="(min-width: 1024px) 45vw, 100vw" />
+              <PhotoFrame name="colleagues" fallback="talent" className="col-span-3 aspect-[4/3]" sizes="(min-width: 1024px) 27vw, 60vw" />
+              <div aria-hidden="true" className="col-span-2 flex items-center justify-center rounded-[var(--radius-frame)] bg-ink-950">
+                <span className="size-12 rounded-full border-[6px] border-white bg-flow-500" />
+              </div>
+            </div>
+          </div>
         </Container>
       </Section>
 

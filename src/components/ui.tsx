@@ -208,16 +208,28 @@ export function PageHero({
   motifSeed?: number;
 }) {
   return (
-    <section className="relative overflow-hidden bg-paper pt-[calc(var(--header-h)+3.5rem)] pb-16 sm:pb-20 lg:pt-[calc(var(--header-h)+5rem)] lg:pb-24">
+    <section className="noise relative isolate overflow-hidden bg-paper pt-[calc(var(--header-h)+3.5rem)] pb-16 sm:pb-20 lg:pt-[calc(var(--header-h)+5rem)] lg:pb-24">
+      <div aria-hidden="true" className="bg-grid mask-radial absolute inset-0 -z-10 opacity-70" />
+      <div aria-hidden="true" className="absolute -top-48 right-[-12%] -z-10 size-[44rem] rounded-full bg-flow-100/80 blur-[120px]" />
       <StrandMotif
         seed={motifSeed}
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%] w-full opacity-60 [mask-image:linear-gradient(to_right,transparent,black_20%,black_85%,transparent)] lg:left-[35%] lg:h-full lg:w-[65%]"
       />
       <Container className="relative">
-        <Eyebrow>{eyebrow}</Eyebrow>
-        <h1 className="t-h1 mt-5 max-w-4xl text-ink-950">{title}</h1>
-        <div className="t-lead mt-6 max-w-2xl text-ink-600">{lead}</div>
-        {children && <div className="mt-9 flex flex-wrap gap-3">{children}</div>}
+        <div className="fade-up">
+          <Eyebrow>{eyebrow}</Eyebrow>
+        </div>
+        <h1 className="fade-up t-h1 mt-5 max-w-4xl text-ink-950" style={{ ["--d" as string]: "90ms" }}>
+          {title}
+        </h1>
+        <div className="fade-up t-lead mt-6 max-w-2xl text-ink-600" style={{ ["--d" as string]: "200ms" }}>
+          {lead}
+        </div>
+        {children && (
+          <div className="fade-up mt-9 flex flex-wrap gap-3" style={{ ["--d" as string]: "300ms" }}>
+            {children}
+          </div>
+        )}
       </Container>
     </section>
   );
@@ -233,24 +245,21 @@ export function CtaBand({
   actions: { label: string; href: string; variant?: Variant }[];
 }) {
   return (
-    <Section tone="ink" className="overflow-hidden">
-      <StrandMotif
-        seed={19}
-        t={3.1}
-        className="pointer-events-none absolute inset-0 h-full w-full opacity-35 mix-blend-screen [mask-image:linear-gradient(to_bottom,transparent,black_40%,black_70%,transparent)]"
-      />
+    // Light by design: every page ends on the dark cinematic footer right after this band.
+    <Section tone="white" className="overflow-hidden">
       <Container className="relative">
-        <div className="max-w-3xl">
-          <h2 className="t-h2 text-white">
-            {title}
-          </h2>
-          {lead && <p className="t-lead mt-5 text-ink-300">{lead}</p>}
-          <div className="mt-9 flex flex-wrap gap-3">
-            {actions.map((a, i) => (
-              <ButtonLink key={a.href} href={a.href} variant={a.variant ?? (i === 0 ? "invert" : "outline-invert")}>
-                {a.label}
-              </ButtonLink>
-            ))}
+        <div className="relative overflow-hidden rounded-[var(--radius-panel)] bg-gradient-to-br from-flow-50 via-white to-ink-50 p-8 ring-1 ring-flow-100 sm:p-12 lg:p-16">
+          <StrandMotif seed={19} t={3.1} className="pointer-events-none absolute inset-y-0 right-0 h-full w-2/3 opacity-60 [mask-image:linear-gradient(to_right,transparent,black_45%)]" />
+          <div className="relative max-w-2xl">
+            <h2 className="t-h2 text-ink-950">{title}</h2>
+            {lead && <p className="t-lead mt-5 text-ink-600">{lead}</p>}
+            <div className="mt-9 flex flex-wrap gap-3">
+              {actions.map((a, i) => (
+                <ButtonLink key={a.href} href={a.href} variant={a.variant ?? (i === 0 ? "primary" : "secondary")}>
+                  {a.label}
+                </ButtonLink>
+              ))}
+            </div>
           </div>
         </div>
       </Container>

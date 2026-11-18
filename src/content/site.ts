@@ -40,9 +40,10 @@ export const mainNav: NavGroup[] = [
   {
     label: "Solutions",
     children: [
+      { label: "All solutions", href: "/solutions", description: "Eight capabilities across technology and talent." },
       { label: "Technology", href: "/solutions/technology", description: "AI, software, cloud, data, security and automation." },
       { label: "Talent", href: "/solutions/talent", description: "Technical recruiting, IT staffing and dedicated teams." },
-      { label: "Technology + Talent", href: "/solutions/technology-talent", description: "One partner for the solution and the people who run it." },
+      { label: "Transformation", href: "/solutions/transformation", description: "Technology and talent combined in one plan." },
     ],
   },
   { label: "Industries", href: "/industries" },
@@ -55,9 +56,10 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
   {
     heading: "Solutions",
     links: [
+      { label: "All solutions", href: "/solutions" },
       { label: "Technology", href: "/solutions/technology" },
       { label: "Talent", href: "/solutions/talent" },
-      { label: "Technology + Talent", href: "/solutions/technology-talent" },
+      { label: "Transformation", href: "/solutions/transformation" },
       { label: "Industries", href: "/industries" },
     ],
   },
@@ -75,6 +77,7 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
     links: [
       { label: "Start a project", href: "/contact?need=technology" },
       { label: "Find talent", href: "/contact?need=talent" },
+      { label: "Transform with us", href: "/contact?need=transformation" },
       { label: "Join our network", href: "/careers#join" },
       { label: "Contact", href: "/contact" },
     ],

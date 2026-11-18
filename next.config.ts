@@ -63,14 +63,19 @@ const nextConfig: NextConfig = {
     },
   },
   async redirects() {
-    if (!wwwHost) return [];
     return [
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: wwwHost }],
-        destination: `${canonical.origin}/:path*`,
-        permanent: true,
-      },
+      // Renamed in the 2026-11 redesign; the old URL was live, so keep it working.
+      { source: "/solutions/technology-talent", destination: "/solutions/transformation", permanent: true },
+      ...(wwwHost
+        ? [
+            {
+              source: "/:path*",
+              has: [{ type: "host" as const, value: wwwHost }],
+              destination: `${canonical.origin}/:path*`,
+              permanent: true,
+            },
+          ]
+        : []),
     ];
   },
   async headers() {

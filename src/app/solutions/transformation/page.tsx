@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import { EcosystemMap } from "@/components/ecosystem-map";
 import { Journey, JourneyLegend, PillarNode, type JourneyStep } from "@/components/journey";
+import { PhotoFrame } from "@/components/photo-frame";
 import { ButtonLink, Container, CtaBand, PageHero, Section, SectionHeading, cx } from "@/components/ui";
 import { engagementModels } from "@/content/capabilities";
 
 export const metadata: Metadata = {
-  title: "Technology + Talent: One Strategic Partner",
+  title: "Transformation: Technology and Talent in One Plan",
   description:
     "The right technology and the right people from one partner. Syntax Flow combines technology consulting and engineering with technical talent and dedicated teams.",
-  alternates: { canonical: "/solutions/technology-talent" },
+  alternates: { canonical: "/solutions/transformation" },
 };
 
 const journey: JourneyStep[] = [
@@ -35,7 +36,7 @@ export default function TechnologyTalentPage() {
   return (
     <>
       <PageHero
-        eyebrow="Solutions / Technology + Talent"
+        eyebrow="Solutions / Transformation"
         title={
           <>
             The right technology.
@@ -48,7 +49,7 @@ export default function TechnologyTalentPage() {
         lead="Organizations rarely have just one problem. They need technology, and they need people capable of building and operating it. We solve both."
         motifSeed={31}
       >
-        <ButtonLink href="/contact?need=both">Transform With Us</ButtonLink>
+        <ButtonLink href="/contact?need=transformation">Transform With Us</ButtonLink>
         <ButtonLink href="#journey" variant="secondary" arrow={false}>
           See the journey
         </ButtonLink>
@@ -92,6 +93,12 @@ export default function TechnologyTalentPage() {
             </div>
           </div>
           <Journey steps={journey} />
+        </Container>
+      </Section>
+
+      <Section tone="white" aria-label="Transformation in practice" className="pt-0 sm:pt-0 lg:pt-0">
+        <Container>
+          <PhotoFrame name="transform" fallback="transformation" className="aspect-[21/9] w-full max-sm:aspect-[4/3]" sizes="(min-width: 1280px) 1200px, 100vw" />
         </Container>
       </Section>
 
@@ -169,7 +176,7 @@ export default function TechnologyTalentPage() {
         title="What are you trying to accomplish?"
         lead="Describe the outcome. We will map the technology and the team it takes."
         actions={[
-          { label: "Transform With Us", href: "/contact?need=both" },
+          { label: "Transform With Us", href: "/contact?need=transformation" },
           { label: "Talk to an Expert", href: "/contact" },
         ]}
       />

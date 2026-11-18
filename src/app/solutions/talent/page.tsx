@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ButtonLink, Container, CtaBand, PageHero, Section, SectionHeading } from "@/components/ui";
+import { PhotoFrame } from "@/components/photo-frame";
+import { TalentEquation, TalentNetwork } from "@/components/talent-network";
+import { ButtonLink, Container, CtaBand, Eyebrow, PageHero, Section, SectionHeading } from "@/components/ui";
 import { talentCapabilities } from "@/content/capabilities";
 
 export const metadata: Metadata = {
@@ -76,6 +78,28 @@ export default function TalentPage() {
               </li>
             ))}
           </ul>
+        </Container>
+      </Section>
+
+      <Section tone="ink" aria-labelledby="talent-network" className="noise overflow-hidden">
+        <div aria-hidden="true" className="bg-grid-dark mask-fade-y pointer-events-none absolute inset-0" />
+        <Container className="relative">
+          <Eyebrow tone="dark">People flow</Eyebrow>
+          <h2 id="talent-network" className="sr-only">
+            Roles we recruit
+          </h2>
+          <div className="mt-6">
+            <TalentEquation />
+          </div>
+          <div className="mt-14">
+            <TalentNetwork />
+          </div>
+        </Container>
+      </Section>
+
+      <Section tone="white" aria-label="Recruiting in practice" className="pb-0 sm:pb-0 lg:pb-0">
+        <Container>
+          <PhotoFrame name="colleagues" fallback="talent" className="aspect-[21/9] w-full max-sm:aspect-[4/3]" sizes="(min-width: 1280px) 1200px, 100vw" />
         </Container>
       </Section>
 

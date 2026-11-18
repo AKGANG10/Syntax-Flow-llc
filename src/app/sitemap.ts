@@ -6,7 +6,8 @@ const LAST_UPDATED = "2026-11-18";
 
 const routes: { path: string; priority: number }[] = [
   { path: "/", priority: 1 },
-  { path: "/solutions/technology-talent", priority: 0.9 },
+  { path: "/solutions", priority: 0.9 },
+  { path: "/solutions/transformation", priority: 0.9 },
   { path: "/solutions/technology", priority: 0.9 },
   { path: "/solutions/talent", priority: 0.9 },
   { path: "/industries", priority: 0.7 },

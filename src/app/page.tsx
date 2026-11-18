@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { EcosystemMap } from "@/components/ecosystem-map";
-import { FlowField } from "@/components/flow-field";
-import { LifecycleRail } from "@/components/lifecycle-rail";
-import { ArrowIcon, ButtonLink, Container, CtaBand, Eyebrow, Section, SectionHeading, TextLink, cx } from "@/components/ui";
-import { engagementModels, lifecycle, talentCapabilities, technologyCapabilities } from "@/content/capabilities";
+import { Magnetic } from "@/components/effects";
+import { HeroScene } from "@/components/hero-scene";
+import { IndustryRail } from "@/components/industry-rail";
+import { WordReveal } from "@/components/intro";
+import { NeedCards } from "@/components/need-cards";
+import { PhotoFrame } from "@/components/photo-frame";
+import { SolutionsGrid } from "@/components/solutions-grid";
+import { TalentEquation, TalentNetwork } from "@/components/talent-network";
+import { TheFlow } from "@/components/the-flow";
+import { ButtonLink, Container, CtaBand, Eyebrow, Section, SectionHeading, TextLink } from "@/components/ui";
+import { flowSteps, solutions, type VizKind } from "@/content/capabilities";
 import { industries } from "@/content/industries";
+import type { MediaKey } from "@/content/media";
 import { company, formattedAddress } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -13,334 +20,221 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const routes = [
-  { label: "I need technology", href: "/contact?need=technology" },
-  { label: "I need talent", href: "/contact?need=talent" },
-  { label: "I need both", href: "/contact?need=both" },
+const stepMedia: { key: MediaKey; viz: VizKind }[] = [
+  { key: "discover", viz: "data" },
+  { key: "design", viz: "software" },
+  { key: "build", viz: "ai" },
+  { key: "connect", viz: "talent" },
+  { key: "scale", viz: "cloud" },
+  { key: "transform", viz: "transformation" },
 ];
 
-const exampleSteps = [
-  "Define the business problem",
-  "Design the solution",
-  "Architect the platform",
-  "Build the software",
-  "Implement the AI",
-  "Secure the environment",
-  "Deploy to the cloud",
-  "Provide the engineers to operate and scale it",
-];
+const caseFormat = ["Client / industry", "Challenge", "Solution", "Impact", "Technology"];
 
 export default function HomePage() {
   return (
     <>
-      {/* Hero */}
-      {/* Phones: strands sit in flow below the text. Desktop: behind it, faded under the copy. */}
+      {/* HERO: data flow */}
       <section className="relative isolate flex flex-col overflow-hidden bg-paper">
-        <div className="relative order-last h-72 w-full sm:h-80 lg:absolute lg:inset-x-0 lg:top-[10%] lg:-z-10 lg:h-[84%]">
-          <FlowField className="absolute inset-0 h-full w-full [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]" />
+        <div aria-hidden="true" className="bg-grid mask-radial absolute inset-0 -z-20 opacity-70" />
+        <div aria-hidden="true" className="absolute -top-40 right-[-10%] -z-20 size-[52rem] rounded-full bg-flow-100/70 blur-[120px]" />
+        <div className="relative order-last h-72 w-full sm:h-80 lg:absolute lg:inset-0 lg:-z-10 lg:h-full">
+          <HeroScene
+            className="absolute inset-0 h-full w-full"
+            fallbackClassName="absolute inset-0 h-full w-full [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] lg:top-[12%] lg:h-[80%]"
+          />
         </div>
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 max-lg:hidden bg-[linear-gradient(90deg,var(--color-paper)_0%,rgb(246_249_251/0.96)_40%,rgb(246_249_251/0)_66%)]"
-        />
-        <Container className="flex flex-col justify-start pt-[calc(var(--header-h)+3.5rem)] pb-4 sm:pt-[calc(var(--header-h)+5rem)] lg:min-h-[max(40rem,100svh)] lg:justify-center lg:pt-[var(--header-h)] lg:pb-16">
-          <div className="max-w-[40rem]">
-            <Eyebrow>{company.tagline}</Eyebrow>
-            <h1 className="t-display mt-6 text-ink-950">Build what&rsquo;s next.</h1>
-            <p className="mt-6 text-[clamp(1.25rem,1.05rem+0.9vw,1.75rem)] font-semibold tracking-[-0.02em] text-ink-800">
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,var(--color-paper)_0%,rgb(246_249_251/0.94)_34%,rgb(246_249_251/0)_60%)] max-lg:hidden" />
+
+        <Container className="flex flex-col justify-start pt-[calc(var(--header-h)+3.5rem)] pb-4 sm:pt-[calc(var(--header-h)+5rem)] lg:min-h-[max(42rem,100svh)] lg:justify-center lg:pt-[var(--header-h)] lg:pb-20">
+          <div className="max-w-[42rem]">
+            <div className="fade-up" style={{ ["--d" as string]: "80ms" }}>
+              <Eyebrow>{company.tagline}</Eyebrow>
+            </div>
+            <WordReveal as="h1" text="Build what’s next." className="t-display mt-6 block text-ink-950" delay={150} />
+            <p className="fade-up mt-6 text-[clamp(1.25rem,1.05rem+0.9vw,1.75rem)] font-semibold tracking-[-0.02em] text-ink-800" style={{ ["--d" as string]: "520ms" }}>
               Technology. Talent. <span className="text-flow-700">Transformation.</span>
             </p>
-            <p className="t-lead mt-5 max-w-xl text-ink-600">
+            <p className="fade-up t-lead mt-5 max-w-xl text-ink-600" style={{ ["--d" as string]: "640ms" }}>
               We help ambitious organizations build, modernize and scale through intelligent technology and exceptional technical talent.
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <ButtonLink href="/contact">Start a Conversation</ButtonLink>
-              <ButtonLink href="#capabilities" variant="secondary" arrow={false}>
-                Explore Our Capabilities
-              </ButtonLink>
+            <div className="fade-up mt-9 flex flex-wrap gap-3" style={{ ["--d" as string]: "760ms" }}>
+              <Magnetic>
+                <ButtonLink href="/contact">Start a Conversation</ButtonLink>
+              </Magnetic>
+              <Magnetic>
+                <ButtonLink href="#solutions" variant="secondary" arrow={false}>
+                  Explore Our Capabilities
+                </ButtonLink>
+              </Magnetic>
             </div>
-            <nav aria-label="Choose your path" className="mt-10">
-              <p className="text-sm font-medium text-ink-600">What do you need?</p>
-              <ul className="mt-3 flex flex-wrap gap-2">
-                {routes.map((r) => (
-                  <li key={r.href}>
-                    <Link
-                      href={r.href}
-                      className="glass flex min-h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold text-ink-900 transition-colors hover:border-flow-400"
-                    >
-                      <span aria-hidden="true" className="size-2 rounded-full bg-flow-500" />
-                      {r.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-4 text-sm text-ink-600">
-                Looking for your next role?{" "}
-                <Link href="/careers#join" className="font-semibold text-flow-700 underline decoration-flow-300 underline-offset-4 hover:decoration-flow-700">
-                  Join our talent network
-                </Link>
-              </p>
-            </nav>
+            <p className="fade-up mt-8 text-sm text-ink-600" style={{ ["--d" as string]: "880ms" }}>
+              Looking for your next role?{" "}
+              <Link href="/careers#join" className="font-semibold text-flow-700 underline decoration-flow-300 underline-offset-4 hover:decoration-flow-700">
+                Join our talent network
+              </Link>
+            </p>
           </div>
         </Container>
       </section>
 
-      {/* Two connected worlds */}
-      <Section tone="white" aria-labelledby="home-worlds">
+      {/* WHAT DO YOU NEED? */}
+      <section aria-labelledby="home-need" className="relative bg-paper pb-20 sm:pb-24">
         <Container>
-          <SectionHeading
-            id="home-worlds"
-            eyebrow="One company, two connected capabilities"
-            title="Technology needs people. People need the right technology. We connect both."
-          />
-          <div className="mt-14 grid gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
-            <article className="reveal rounded-[var(--radius-panel)] bg-flow-50 p-8 ring-1 ring-flow-100 sm:p-10">
-              <p className="t-label text-flow-700">Build with technology</p>
-              <h3 className="t-h3 mt-4 text-ink-950">Systems designed for the problem you actually have.</h3>
-              <p className="mt-3 leading-relaxed text-ink-600">
-                AI, software, cloud, data, security and automation, engineered to be maintained and scaled long after launch.
-              </p>
-              <div className="mt-6">
-                <TextLink href="/solutions/technology">Technology solutions</TextLink>
-              </div>
-            </article>
-            <div aria-hidden="true" className="flex items-center justify-center py-2 lg:px-2">
-              <span className="flex size-16 items-center justify-center rounded-full border-2 border-ink-800 bg-white text-2xl font-bold text-ink-900 shadow-soft">
-                ×
-              </span>
-            </div>
-            <article className="reveal rounded-[var(--radius-panel)] bg-ink-50 p-8 ring-1 ring-ink-100 sm:p-10">
-              <p className="t-label text-ink-700">Build with people</p>
-              <h3 className="t-h3 mt-4 text-ink-950">The specialists and teams to deliver and run it.</h3>
-              <p className="mt-3 leading-relaxed text-ink-600">
-                Engineers, architects, data specialists, security professionals and complete teams, recruited by people who understand the work.
-              </p>
-              <div className="mt-6">
-                <TextLink href="/solutions/talent">Talent solutions</TextLink>
-              </div>
-            </article>
+          <div className="mb-6 flex items-end justify-between gap-6">
+            <h2 id="home-need" className="t-label text-ink-500">
+              What do you need?
+            </h2>
+            <span aria-hidden="true" className="mb-1 h-px flex-1 bg-gradient-to-r from-ink-200 to-transparent" />
           </div>
-          <p className="mt-8 text-center text-ink-600">
-            One strategic partner for the solution and the people behind it.{" "}
-            <Link href="/solutions/technology-talent" className="font-semibold text-flow-700 underline decoration-flow-300 underline-offset-4 hover:decoration-flow-700">
-              See how Technology + Talent works
-            </Link>
+          <NeedCards />
+        </Container>
+      </section>
+
+      {/* STATEMENT */}
+      <Section tone="white" aria-label="What we believe">
+        <Container>
+          <p className="scrub-text max-w-5xl text-[clamp(1.9rem,1.2rem+3vw,4rem)] leading-[1.08] font-extrabold tracking-[-0.04em] text-ink-950">
+            Technology needs people. People need the right technology. Syntax Flow connects both, from the first question to the team that runs it.
           </p>
         </Container>
       </Section>
 
-      {/* Lifecycle */}
-      <Section aria-labelledby="home-lifecycle">
-        <Container>
-          <SectionHeading
-            id="home-lifecycle"
-            eyebrow="Discover → Scale"
-            title="From the first question to a team that runs it."
-            lead="Bring us a business problem or a technology challenge. We can stay with it across the whole lifecycle, or step in exactly where you need us."
-          />
-          <div className="mt-16">
-            <LifecycleRail steps={lifecycle} />
-          </div>
-        </Container>
-      </Section>
+      {/* THE FLOW */}
+      <TheFlow
+        steps={flowSteps}
+        media={stepMedia.map((m, i) => (
+          <PhotoFrame key={m.key} name={m.key} fallback={m.viz} tone="dark" className="h-full w-full" sizes="(min-width: 1024px) 40vw, 100vw" priority={i === 0} parallax={false} />
+        ))}
+      />
 
-      {/* Capabilities */}
-      <Section tone="white" id="capabilities" aria-labelledby="home-capabilities">
-        <Container>
-          <SectionHeading id="home-capabilities" eyebrow="Capabilities" title="Capabilities across both worlds." />
-
-          <div className="mt-14 flex items-center gap-4">
-            <h3 className="t-label text-flow-700">Technology</h3>
-            <span aria-hidden="true" className="h-px flex-1 bg-flow-200" />
-          </div>
-          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {technologyCapabilities.map((c) => (
-              <li key={c.id} className="reveal">
-                <Link
-                  href={`/solutions/technology#${c.id}`}
-                  className="group flex h-full flex-col rounded-[var(--radius-card)] bg-paper p-6 ring-1 ring-ink-100 transition-[box-shadow,transform] duration-[var(--duration-normal)] hover:-translate-y-0.5 hover:shadow-lift hover:ring-flow-200"
-                >
-                  <span aria-hidden="true" className="size-3 rounded-full bg-flow-500" />
-                  <span className="t-h3 mt-5 block text-ink-950">{c.title}</span>
-                  <span className="mt-2 block flex-1 leading-relaxed text-ink-600">{c.summary}</span>
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-flow-700">
-                    Explore <ArrowIcon className="transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-16 flex items-center gap-4">
-            <h3 className="t-label text-ink-700">Talent</h3>
-            <span aria-hidden="true" className="h-px flex-1 bg-ink-200" />
-          </div>
-          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {talentCapabilities.map((c) => (
-              <li key={c.id} className="reveal">
-                <Link
-                  href={`/solutions/talent#${c.id}`}
-                  className="group flex h-full flex-col rounded-[var(--radius-card)] bg-paper p-6 ring-1 ring-ink-100 transition-[box-shadow,transform] duration-[var(--duration-normal)] hover:-translate-y-0.5 hover:shadow-lift hover:ring-ink-300"
-                >
-                  <span aria-hidden="true" className="size-3 rounded-full border-2 border-ink-800" />
-                  <span className="t-h3 mt-5 block text-ink-950">{c.title}</span>
-                  <span className="mt-2 block flex-1 leading-relaxed text-ink-600">{c.summary}</span>
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-flow-700">
-                    Explore <ArrowIcon className="transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </Section>
-
-      {/* Three ways */}
-      <Section aria-labelledby="home-ways">
-        <Container>
-          <SectionHeading id="home-ways" eyebrow="Engagement" title="Three ways to work with us." />
-          <ul className="mt-14 grid gap-5 lg:grid-cols-3">
-            {engagementModels.map((m, i) => (
-              <li
-                key={m.id}
-                className={cx(
-                  "reveal flex flex-col rounded-[var(--radius-panel)] p-8 sm:p-10",
-                  i === 2 ? "bg-ink-950 text-white" : "bg-white ring-1 ring-ink-100",
-                )}
-              >
-                <p className={cx("t-label", i === 2 ? "text-flow-300" : "text-flow-700")}>{String(i + 1).padStart(2, "0")}</p>
-                <h3 className={cx("mt-4 text-[2rem] font-extrabold tracking-[-0.035em]", i === 2 ? "text-white" : "text-ink-950")}>{m.name}</h3>
-                <p className={cx("mt-2 font-medium", i === 2 ? "text-ink-200" : "text-ink-700")}>{m.headline}</p>
-                <ul className={cx("mt-6 flex-1 space-y-2.5 text-[0.95rem]", i === 2 ? "text-ink-300" : "text-ink-600")}>
-                  {m.examples.map((e) => (
-                    <li key={e} className="flex items-center gap-3">
-                      <span aria-hidden="true" className={cx("size-1.5 rounded-full", i === 2 ? "bg-flow-300" : "bg-flow-500")} />
-                      {e}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-8">
-                  <ButtonLink href={m.cta.href} variant={i === 2 ? "invert" : "primary"}>
-                    {m.cta.label}
-                  </ButtonLink>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </Section>
-
-      {/* Ecosystem map */}
-      <Section tone="ink" aria-labelledby="home-map">
-        <Container>
-          <SectionHeading
-            id="home-map"
-            tone="dark"
-            eyebrow="Technology × Talent × Outcomes"
-            title="Every system needs the people who can run it."
-            lead="Pick a technology to see the people it takes and the outcomes it drives. This is how we plan engagements: the solution and the team, together."
-          />
-          <div className="mt-14">
-            <EcosystemMap />
-          </div>
-        </Container>
-      </Section>
-
-      {/* Example engagement */}
-      <Section tone="white" aria-labelledby="home-example">
-        <Container className="grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-20">
-          <div>
-            <SectionHeading
-              id="home-example"
-              eyebrow="Example engagement"
-              title="A company wants to build an AI platform."
-              lead="A typical technology firm hands this off halfway. A staffing firm starts at the end. We can carry it the whole way, so nothing gets lost between the people who designed it and the people who run it."
-            />
-            <p className="mt-6 text-sm text-ink-500">Illustrative example of the engagement model. Not a client case study.</p>
-          </div>
-          <ol className="relative space-y-0">
-            {exampleSteps.map((s, i) => (
-              <li key={s} className="relative flex gap-5 pb-6 last:pb-0">
-                {i < exampleSteps.length - 1 && <span aria-hidden="true" className="absolute top-8 bottom-0 left-[0.9375rem] w-px bg-flow-200" />}
-                <span
-                  aria-hidden="true"
-                  className={cx(
-                    "relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full font-mono text-xs font-medium",
-                    i === exampleSteps.length - 1 ? "border-2 border-ink-800 bg-white text-ink-900" : "bg-flow-100 text-flow-800",
-                  )}
-                >
-                  {i + 1}
-                </span>
-                <p className="pt-1 text-lg font-semibold text-ink-900">{s}</p>
-              </li>
-            ))}
-          </ol>
-        </Container>
-      </Section>
-
-      {/* Industries */}
-      <Section aria-labelledby="home-industries">
-        <Container>
-          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-            <SectionHeading
-              id="home-industries"
-              eyebrow="Industries"
-              title="Built for the sectors that run on technology and skilled people."
-            />
+      {/* SOLUTIONS: technology flow */}
+      <Section id="solutions" aria-labelledby="home-solutions" className="noise">
+        <div aria-hidden="true" className="bg-grid mask-fade-y pointer-events-none absolute inset-0 opacity-60" />
+        <Container className="relative">
+          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <SectionHeading id="home-solutions" eyebrow="Solutions" title="Eight capabilities. One connected partner." lead="Open any card to see what is inside. Each one can be delivered by our engineers, staffed by our recruiters, or both." />
             <div className="shrink-0">
-              <TextLink href="/industries">All industries</TextLink>
+              <TextLink href="/solutions">All solutions</TextLink>
             </div>
           </div>
-          <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {industries.map((ind) => (
-              <li key={ind.id}>
-                <Link
-                  href={`/industries#${ind.id}`}
-                  className="group flex h-full flex-col rounded-[var(--radius-card)] bg-white p-5 ring-1 ring-ink-100 transition-shadow hover:shadow-soft hover:ring-flow-200"
-                >
-                  <span className="font-semibold text-ink-950">{ind.name}</span>
-                  <span className="mt-1.5 text-sm leading-relaxed text-ink-600">{ind.summary}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-14">
+            <SolutionsGrid items={solutions} />
+          </div>
         </Container>
       </Section>
 
-      {/* Trust */}
-      <Section tone="white" aria-labelledby="home-trust">
+      {/* TALENT: people flow */}
+      <Section tone="ink" aria-labelledby="home-talent" className="noise overflow-hidden">
+        <div aria-hidden="true" className="bg-grid-dark mask-fade-y pointer-events-none absolute inset-0" />
+        <Container className="relative">
+          <Eyebrow tone="dark">Talent</Eyebrow>
+          <h2 id="home-talent" className="sr-only">
+            Technology plus people equals transformation
+          </h2>
+          <div className="mt-6">
+            <TalentEquation />
+          </div>
+          <p className="t-lead mt-6 max-w-2xl text-ink-300">
+            Every system needs people who can build it, run it and improve it. Explore the roles we recruit and the teams we assemble.
+          </p>
+          <div className="mt-14">
+            <TalentNetwork />
+          </div>
+          <div className="mt-12 flex flex-wrap gap-3">
+            <ButtonLink href="/contact?need=talent" variant="invert">
+              Find Talent
+            </ButtonLink>
+            <ButtonLink href="/careers" variant="outline-invert">
+              Join Our Network
+            </ButtonLink>
+          </div>
+        </Container>
+      </Section>
+
+      {/* HUMAN ENVIRONMENT */}
+      <Section tone="white" aria-labelledby="home-human" className="overflow-hidden">
+        <Container className="grid items-center gap-14 lg:grid-cols-[1fr_1.15fr] lg:gap-20">
+          <div>
+            <SectionHeading
+              id="home-human"
+              eyebrow="People and practice"
+              title="Behind every system is a team that knows it."
+              lead="Our engineers and our recruiters plan together. The people who design a platform help choose the people who will run it, so knowledge stays where the work is."
+            />
+            <ul className="mt-10 grid gap-4 sm:grid-cols-2">
+              {[
+                ["Engineering judgment", "Architecture, security and delivery decisions made by practitioners."],
+                ["Recruiting depth", "Candidates assessed against the real requirements of the role."],
+                ["One plan", "The roadmap and the hiring plan are written together."],
+                ["Knowledge that stays", "Documentation and handover are part of every engagement."],
+              ].map(([t, d]) => (
+                <li key={t} className="rounded-[var(--radius-card)] bg-paper p-5 ring-1 ring-ink-100">
+                  <p className="font-semibold text-ink-950">{t}</p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-ink-600">{d}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="relative grid grid-cols-6 grid-rows-6 gap-4 [aspect-ratio:1/1.02] max-sm:[aspect-ratio:1/1.2]">
+            <PhotoFrame name="typing" fallback="software" className="col-span-4 row-span-4 rounded-[2.5rem_0.75rem_2.5rem_2.5rem]" sizes="(min-width: 1024px) 34vw, 66vw" />
+            <PhotoFrame name="connect" fallback="talent" className="col-span-2 col-start-5 row-span-3 row-start-2" sizes="(min-width: 1024px) 17vw, 33vw" />
+            <PhotoFrame name="technician" fallback="cloud" className="col-span-3 col-start-3 row-span-2 row-start-5 rounded-[0.75rem_2.5rem_2.5rem_2.5rem]" sizes="(min-width: 1024px) 25vw, 50vw" />
+            <div aria-hidden="true" className="col-span-2 col-start-1 row-span-2 row-start-5 flex items-center justify-center rounded-[var(--radius-frame)] bg-ink-950">
+              <span className="size-10 rounded-full border-[5px] border-white bg-flow-500" />
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* INDUSTRIES: global flow */}
+      <IndustryRail items={industries} />
+
+      {/* PROOF: project flow */}
+      <Section aria-labelledby="home-proof">
         <Container>
-          <SectionHeading
-            id="home-trust"
-            eyebrow="Trust"
-            title="Credibility we can show you."
-            lead="No invented logos, testimonials or statistics. Here is what you can verify today."
-          />
-          <ul className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <li className="rounded-[var(--radius-card)] bg-paper p-6 ring-1 ring-ink-100">
-              <p className="font-semibold text-ink-950">Headquartered in Dallas, Texas</p>
-              <p className="mt-2 text-sm leading-relaxed text-ink-600">{formattedAddress}</p>
-            </li>
-            <li className="rounded-[var(--radius-card)] bg-paper p-6 ring-1 ring-ink-100">
-              <p className="font-semibold text-ink-950">E-Verify® participating employer</p>
-              <p className="mt-2 text-sm leading-relaxed text-ink-600">
-                {company.legalName} participates in E-Verify to confirm employment eligibility in the United States.
-              </p>
-            </li>
-            <li className="rounded-[var(--radius-card)] bg-paper p-6 ring-1 ring-ink-100">
-              <p className="font-semibold text-ink-950">Verified outcomes only</p>
-              <p className="mt-2 text-sm leading-relaxed text-ink-600">We publish client results only with permission and with real, checked numbers.</p>
-            </li>
-            <li className="rounded-[var(--radius-card)] bg-paper p-6 ring-1 ring-ink-100">
-              <p className="font-semibold text-ink-950">Security built in</p>
-              <p className="mt-2 text-sm leading-relaxed text-ink-600">
-                Strict security headers, validated inputs and no third-party trackers on this site.{" "}
-                <Link href="/trust" className="font-semibold text-flow-700 underline decoration-flow-300 underline-offset-4">
-                  Trust & Security
-                </Link>
-              </p>
-            </li>
-          </ul>
+          <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+            <div>
+              <SectionHeading
+                id="home-proof"
+                eyebrow="Work"
+                title="Proof, without the fiction."
+                lead="We publish case studies only with client permission and verified numbers. Each one follows the same structure, so you can compare like with like."
+              />
+              <ol className="mt-10 divide-y divide-ink-200 border-y border-ink-200">
+                {caseFormat.map((c, i) => (
+                  <li key={c} className="flex items-baseline gap-6 py-4">
+                    <span className="font-mono text-xs text-flow-700">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="text-xl font-bold tracking-[-0.02em] text-ink-900">{c}</span>
+                  </li>
+                ))}
+              </ol>
+              <div className="mt-8">
+                <TextLink href="/work">How we report outcomes</TextLink>
+              </div>
+            </div>
+            <ul className="grid content-start gap-4">
+              {[
+                ["Headquartered in Dallas, Texas", formattedAddress],
+                ["E-Verify® participating employer", `${company.legalName} participates in E-Verify to confirm employment eligibility in the United States.`],
+                ["Security built in", "Strict security headers, validated inputs and no third-party trackers on this website."],
+              ].map(([t, d]) => (
+                <li key={t} className="rounded-[var(--radius-card)] bg-white p-6 shadow-soft ring-1 ring-ink-100">
+                  <p className="font-semibold text-ink-950">{t}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-600">{d}</p>
+                </li>
+              ))}
+              <li className="rounded-[var(--radius-card)] bg-ink-950 p-6 text-white">
+                <p className="font-semibold">Verified outcomes only</p>
+                <p className="mt-2 text-sm leading-relaxed text-ink-300">
+                  No invented logos, testimonials or statistics.{" "}
+                  <Link href="/trust" className="font-semibold text-flow-300 underline underline-offset-4">
+                    Trust &amp; Security
+                  </Link>
+                </p>
+              </li>
+            </ul>
+          </div>
         </Container>
       </Section>
 
@@ -348,9 +242,8 @@ export default function HomePage() {
         title="Tell us what you need to build."
         lead="Technology, talent or both. Start with a short conversation and we will point you to the right team."
         actions={[
-          { label: "I need technology", href: "/contact?need=technology" },
-          { label: "I need talent", href: "/contact?need=talent" },
-          { label: "I need both", href: "/contact?need=both" },
+          { label: "Start a Conversation", href: "/contact" },
+          { label: "Find Talent", href: "/contact?need=talent" },
         ]}
       />
     </>

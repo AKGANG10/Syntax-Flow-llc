@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import { MiniViz } from "@/components/mini-viz";
+import { PhotoFrame } from "@/components/photo-frame";
 import { ButtonLink, Container, CtaBand, PageHero, Section, SectionHeading, TextLink } from "@/components/ui";
-import { technologyCapabilities } from "@/content/capabilities";
+import { technologyCapabilities, type VizKind } from "@/content/capabilities";
+
+const capabilityViz: Record<string, VizKind> = { ai: "ai", software: "software", cloud: "cloud", data: "data", security: "security", automation: "managed" };
 
 export const metadata: Metadata = {
   title: "Technology Solutions: AI, Software, Cloud, Data and Security",
@@ -34,8 +38,8 @@ export default function TechnologyPage() {
         motifSeed={11}
       >
         <ButtonLink href="/contact?need=technology">Build With Us</ButtonLink>
-        <ButtonLink href="/solutions/technology-talent" variant="secondary">
-          Technology + Talent
+        <ButtonLink href="/solutions/transformation" variant="secondary">
+          Transformation
         </ButtonLink>
       </PageHero>
 
@@ -44,11 +48,15 @@ export default function TechnologyPage() {
           <SectionHeading id="tech-areas" eyebrow="Capability areas" title="Six areas, one engineering standard." />
           <div className="mt-14 divide-y divide-ink-100 border-y border-ink-100">
             {technologyCapabilities.map((c, i) => (
-              <article key={c.id} id={c.id} className="grid gap-6 py-10 lg:grid-cols-[0.9fr_1.4fr] lg:gap-16 lg:py-12">
+              <article key={c.id} id={c.id} className="group grid gap-6 py-10 lg:grid-cols-[0.9fr_1.4fr] lg:gap-16 lg:py-12">
                 <div>
                   <p className="t-label text-flow-700">{String(i + 1).padStart(2, "0")}</p>
                   <h3 className="t-h3 mt-3 text-ink-950">{c.title}</h3>
                   <p className="mt-3 leading-relaxed text-ink-600">{c.summary}</p>
+                  <div className="relative mt-6 w-fit overflow-hidden rounded-2xl bg-paper px-6 py-3 ring-1 ring-ink-100">
+                    <div aria-hidden="true" className="bg-grid mask-radial absolute inset-0" />
+                    <MiniViz kind={capabilityViz[c.id] ?? "software"} className="relative h-24 w-40" />
+                  </div>
                 </div>
                 <ul className="grid content-start gap-x-8 gap-y-3 sm:grid-cols-2">
                   {c.items.map((item) => (
@@ -61,6 +69,12 @@ export default function TechnologyPage() {
               </article>
             ))}
           </div>
+        </Container>
+      </Section>
+
+      <Section tone="white" aria-label="Engineering in practice" className="pt-0 sm:pt-0 lg:pt-0">
+        <Container>
+          <PhotoFrame name="build" fallback="software" className="aspect-[21/9] w-full max-sm:aspect-[4/3]" sizes="(min-width: 1280px) 1200px, 100vw" />
         </Container>
       </Section>
 
