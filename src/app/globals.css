@@ -267,6 +267,378 @@
   }
 }
 
+/* ======================================================================
+ * Experience layer (redesign 2026-11). See docs/DESIGN_SYSTEM.md.
+ * Every effect is progressive enhancement: without support, or with
+ * prefers-reduced-motion, content renders in its final state.
+ * ==================================================================== */
+
+@theme {
+  /* Signal: restrained cyan, used only for data pulses and live states. */
+  --color-signal-300: #8be7f2;
+  --color-signal-400: #46d2e6;
+  --color-signal-500: #16b3cc;
+
+  --radius-frame: 2rem;
+}
+
+/* Atmosphere */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(21 38 59 / 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(21 38 59 / 0.055) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+@utility bg-grid-dark {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+@utility mask-fade-y {
+  mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+}
+@utility mask-radial {
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 72%);
+}
+
+.noise {
+  position: relative;
+}
+.noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Masked word-by-word reveal (hero and page titles). */
+.word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+.word-mask > span {
+  display: inline-block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .word-mask > span {
+    transform: translateY(108%);
+    animation: word-in 900ms var(--ease-flow) forwards;
+    animation-delay: calc(var(--i, 0) * 70ms + var(--d, 0ms));
+  }
+  .fade-up {
+    opacity: 0;
+    animation: fade-up 800ms var(--ease-flow) forwards;
+    animation-delay: var(--d, 0ms);
+  }
+}
+@keyframes word-in {
+  to {
+    transform: none;
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Statement that fills with colour as it scrolls through the viewport. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .scrub-text {
+      color: transparent;
+      background-image: linear-gradient(90deg, var(--scrub-on, var(--color-ink-950)) 0 50%, var(--scrub-off, var(--color-ink-400)) 50% 100%);
+      background-size: 200% 100%;
+      background-position: 100% 0;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: scrub linear both;
+      animation-timeline: view();
+      animation-range: entry 25% cover 50%;
+    }
+  }
+}
+@keyframes scrub {
+  to {
+    background-position: 0 0;
+  }
+}
+
+/* Photo reveal: clip and colour arrive as the frame enters view. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .photo-reveal {
+      animation: photo-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 35%;
+    }
+    .parallax-inner {
+      animation: parallax linear both;
+      animation-timeline: view();
+    }
+  }
+}
+@keyframes photo-reveal {
+  from {
+    clip-path: inset(10% 8% 10% 8% round var(--radius-frame));
+    filter: grayscale(1) contrast(1.05);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round var(--radius-frame));
+    filter: grayscale(0);
+  }
+}
+@keyframes parallax {
+  from {
+    transform: translateY(-7%) scale(1.16);
+  }
+  to {
+    transform: translateY(7%) scale(1.16);
+  }
+}
+
+/* Animated flow border on interactive cards. */
+@property --flow-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.border-flow {
+  position: relative;
+  isolation: isolate;
+}
+.border-flow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from var(--flow-angle), transparent 0 58%, var(--color-flow-400) 74%, var(--color-signal-400) 84%, transparent 96%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-flow);
+}
+.border-flow:hover::before,
+.border-flow:focus-within::before,
+.border-flow[data-open="true"]::before {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .border-flow::before {
+    animation: flow-angle 5s linear infinite;
+  }
+}
+@keyframes flow-angle {
+  to {
+    --flow-angle: 360deg;
+  }
+}
+
+/* Tilt cards: transform set by useTiltCard; glare follows the pointer. */
+.tilt {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(0);
+  transition: transform 500ms var(--ease-flow);
+}
+.tilt[data-tilting="true"] {
+  transition: transform 80ms linear;
+}
+.tilt-glare {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 0.55), transparent 45%);
+  opacity: 0;
+  transition: opacity var(--duration-normal);
+  mix-blend-mode: soft-light;
+}
+.tilt[data-tilting="true"] .tilt-glare {
+  opacity: 1;
+}
+
+/* Mini visualizations: animate while the card is hovered, focused or open. */
+.viz * {
+  animation-play-state: paused;
+}
+.group:hover .viz *,
+.group:focus-within .viz *,
+.group[data-open="true"] .viz *,
+.viz[data-live="true"] * {
+  animation-play-state: running;
+}
+@keyframes viz-dash {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+@keyframes viz-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes viz-rise {
+  0%,
+  100% {
+    transform: scaleY(0.55);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+@keyframes viz-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes viz-scan {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(74px);
+  }
+}
+
+/* Short intro, shown once per session; never blocks input. */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--color-paper);
+  pointer-events: none;
+  animation: intro-out 520ms var(--ease-flow) 950ms forwards;
+}
+html[data-intro="seen"] .intro {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+}
+@keyframes intro-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.intro-line {
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: intro-draw 800ms var(--ease-flow) 120ms forwards;
+}
+.intro-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  animation: intro-pop 420ms var(--ease-flow) forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes intro-pop {
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Page scroll progress (CSS scroll timeline; hidden where unsupported). */
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 70;
+  height: 2px;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--color-flow-500), var(--color-signal-400));
+  pointer-events: none;
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .scroll-progress {
+      display: block;
+      animation: progress-grow linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+@keyframes progress-grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Desktop cursor companion (the native cursor always stays visible). */
+.cursor-ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 90;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin: -1.125rem 0 0 -1.125rem;
+  border-radius: 999px;
+  border: 1.5px solid rgb(35 128 174 / 0.55);
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  color: white;
+  font: 500 0.625rem/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition:
+    width 260ms var(--ease-flow),
+    height 260ms var(--ease-flow),
+    margin 260ms var(--ease-flow),
+    background-color 260ms var(--ease-flow),
+    border-color 260ms var(--ease-flow),
+    opacity 200ms;
+}
+.cursor-ring[data-visible="true"] {
+  opacity: 1;
+}
+.cursor-ring[data-state="link"] {
+  width: 3rem;
+  height: 3rem;
+  margin: -1.5rem 0 0 -1.5rem;
+  border-color: rgb(35 128 174 / 0.9);
+  background: rgb(35 128 174 / 0.08);
+}
+.cursor-ring[data-state="label"] {
+  width: 5rem;
+  height: 5rem;
+  margin: -2.5rem 0 0 -2.5rem;
+  border-color: transparent;
+  background: var(--color-ink-900);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

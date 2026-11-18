@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { CursorCompanion } from "@/components/effects";
+import { Intro, introScript, ScrollProgress } from "@/components/intro";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { company, siteUrl } from "@/content/site";
@@ -58,10 +60,25 @@ const organizationJsonLd = {
   },
 };
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: company.shortName,
+  url: siteUrl,
+  publisher: { "@type": "Organization", name: company.legalName },
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${plexMono.variable} antialiased`}>
+    // suppressHydrationWarning: the intro script sets data-intro on <html> before hydration.
+    <html lang="en" className={`${jakarta.variable} ${plexMono.variable} antialiased`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
+      </head>
       <body className="flex min-h-dvh flex-col">
+        <Intro />
+        <ScrollProgress />
+        <CursorCompanion />
         <a
           href="#main"
           className="sr-only z-[60] rounded-full bg-ink-900 px-5 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
@@ -77,6 +94,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c") }}
         />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd).replace(/</g, "\\u003c") }} />
       </body>
     </html>
   );

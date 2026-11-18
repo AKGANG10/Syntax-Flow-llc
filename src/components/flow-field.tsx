@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { bundleY, defaultLeads, leadY, makeBundle, palette, seeded, strandRgb, type Strand } from "@/lib/strands";
+import { bundleY, defaultLeads, leadY, makeBundle, mixRgb, palette, seeded, strandRgb, type Strand } from "@/lib/strands";
 
 type Props = {
   className?: string;
   /** Bundle half-height as a fraction of the canvas height. */
   spread?: number;
+  /** "dark" re-colours the strands for navy backgrounds (footer, dark sections). */
+  tone?: "light" | "dark";
 };
 
 /**
@@ -16,7 +18,7 @@ type Props = {
  * at 2. Pauses off-screen and in background tabs; reduced motion renders one
  * still frame; pointer response only on fine pointers. Decorative only.
  */
-export function FlowField({ className, spread = 0.36 }: Props) {
+export function FlowField({ className, spread = 0.36, tone = "light" }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -27,6 +29,7 @@ export function FlowField({ className, spread = 0.36 }: Props) {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const finePointer = window.matchMedia("(pointer: fine)").matches;
     const lowPower = (navigator.hardwareConcurrency ?? 8) <= 4;
+    const dark = tone === "dark";
 
     let w = 0;
     let h = 0;
@@ -71,14 +74,14 @@ export function FlowField({ className, spread = 0.36 }: Props) {
           if (i === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
-        ctx.strokeStyle = `rgba(${strandRgb(s.depth)}, ${s.alpha})`;
+        ctx.strokeStyle = dark ? `rgba(${mixRgb(palette.steel, "#b9dbee", s.depth)}, ${s.alpha * 0.75})` : `rgba(${strandRgb(s.depth)}, ${s.alpha})`;
         ctx.stroke();
       }
 
       // Lead strands (people) with ring nodes at their turning points.
       const rings: [number, number][] = [];
       ctx.lineWidth = 1.8;
-      ctx.strokeStyle = `rgba(21, 38, 59, 0.88)`;
+      ctx.strokeStyle = dark ? "rgba(225, 240, 248, 0.7)" : "rgba(21, 38, 59, 0.88)";
       defaultLeads.forEach((l, li) => {
         ctx.beginPath();
         let prevY = 0;
@@ -105,9 +108,9 @@ export function FlowField({ className, spread = 0.36 }: Props) {
       for (const [x, y] of rings) {
         ctx.beginPath();
         ctx.arc(x, y, 6.5, 0, Math.PI * 2);
-        ctx.fillStyle = "#f6f9fb";
+        ctx.fillStyle = dark ? "#0a1422" : "#f6f9fb";
         ctx.fill();
-        ctx.strokeStyle = palette.navy;
+        ctx.strokeStyle = dark ? "#b9dbee" : palette.navy;
         ctx.stroke();
       }
 
@@ -198,7 +201,7 @@ export function FlowField({ className, spread = 0.36 }: Props) {
       window.removeEventListener("pointermove", onPointer);
       document.documentElement.removeEventListener("pointerleave", onLeave);
     };
-  }, [spread]);
+  }, [spread, tone]);
 
-  return <canvas ref={ref} className={className} aria-hidden="true" data-motion="pending" />;
+  return <canvas ref={ref} className={className} aria-hidden="true" data-motion="pending" data-renderer="2d" />;
 }
