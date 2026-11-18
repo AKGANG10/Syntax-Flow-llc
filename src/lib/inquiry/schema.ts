@@ -14,14 +14,15 @@ import {
 
 /** Authoritative server-side validation. Client checks are a convenience only. */
 
-const text = (max: number, msg = "This field is required.") => z.string().trim().min(1, msg).max(max, `Keep this under ${max} characters.`);
+// z.string(msg) also covers a missing field, so clients never see a raw "expected string" message.
+const text = (max: number, msg = "This field is required.") => z.string(msg).trim().min(1, msg).max(max, `Keep this under ${max} characters.`);
 const optionalText = (max: number) => z.string().trim().max(max, `Keep this under ${max} characters.`).optional().default("");
 const detail = (msg: string) =>
-  z.string().trim().min(limits.minDetail, msg).max(limits.long, `Keep this under ${limits.long} characters.`);
+  z.string(msg).trim().min(limits.minDetail, msg).max(limits.long, `Keep this under ${limits.long} characters.`);
 
 const contact = {
   name: text(limits.name, "Enter your name."),
-  email: z.string().trim().max(limits.email).pipe(z.email("Enter a valid email address.")),
+  email: z.string("Enter a valid email address.").trim().max(limits.email).pipe(z.email("Enter a valid email address.")),
   phone: z
     .string()
     .trim()

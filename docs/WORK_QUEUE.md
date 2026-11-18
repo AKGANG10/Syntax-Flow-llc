@@ -25,7 +25,9 @@ Status as of 2026-11-18: **IMPLEMENTED and TESTED.** Not deployed. Not release r
 - Canonical domain confirmed (apex); `www` permanent redirect added and tested.
 - EmailJS template ID `template_v26pcko` recorded; template variable aliases added; adapter tested against a mock.
 - DNS inspected read-only and a safe go-live change set written (docs/DOMAIN_DNS.md). Google Workspace mail records identified and protected.
-- Hosting compared; Netlify Free recommended (docs/DEPLOY.md).
+- Hosting compared; company deployed to Vercel. Live smoke test passed; production correctly refuses inquiries (503) until EmailJS keys are set.
+- EmailJS Service ID `service_d6czg85` recorded.
+- Server messages for missing fields made plain-language (found on the live deployment).
 - E-Verify poster rule corrected: posters must be hosted on the site, not linked.
 - Lighthouse findings fixed: lifecycle list semantics; scroll reveal no longer fades text.
 
@@ -33,8 +35,8 @@ Status as of 2026-11-18: **IMPLEMENTED and TESTED.** Not deployed. Not release r
 
 | # | Item | Needs | Acceptance |
 |---|---|---|---|
-| 1 | EmailJS Service ID, Public Key, Private Key, with a Gmail service on the Workspace account | Company | Entered as host environment variables; docs/EMAIL_SETUP.md section 5 all checked |
-| 2 | Hosting account (Netlify Free recommended) connected to the GitHub repo | Company signs up | Preview deploy passes the smoke test |
+| 1 | EmailJS Public Key and Private Key (Service ID `service_d6czg85` and Template ID received) | Company | Entered in Vercel environment variables; docs/EMAIL_SETUP.md section 5 all checked |
+| 2 | Vercel: deployed at https://syntax-flow-llc.vercel.app (smoke test passed 2026-11-18). Remaining: Pro plan decision, Git integration, env vars | Company, or CLI login on this machine | docs/DEPLOY.md checklist complete |
 | 3 | DNS change at GoDaddy (apex A and www CNAME only) | Company login, or company applies it | docs/DOMAIN_DNS.md verification list checked |
 | 4 | Legal review of Privacy and Terms; retention policy | Counsel | Draft banners removed (`draft={false}`) |
 | 5 | Confirm statements in docs/CONTENT_INVENTORY.md | Company | Each confirmed or edited |

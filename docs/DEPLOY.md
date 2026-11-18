@@ -1,47 +1,54 @@
 # Deployment
 
-The site needs a host that runs Next.js 16 with a Node.js server for `POST /api/inquiry`. Pages are static.
+**Host: Vercel** (chosen by Syntax Flow, 2026-11-18). Live preview: https://syntax-flow-llc.vercel.app
 
-## Recommendation: Netlify (Free plan)
+Smoke test of that deployment on 2026-11-18 (commit `9e08bcb`): all 12 pages 200, unknown routes 404, all security headers present, robots and sitemap correct, inquiry API rejects other origins (403), wrong content type (415) and invalid fields (400). A valid inquiry returned **503 not configured**: EmailJS keys are not set yet, and the site correctly refuses instead of losing the message.
 
-Checked 2026-11-18:
+## Plan note
 
-- Netlify's Free plan allows commercial use and Netlify supports Next.js 16 ([support forum answer](https://answers.netlify.com/t/can-we-use-netlify-free-plan-for-commercial-purposes/41545), [Next.js 16 changelog](https://www.netlify.com/changelog/next-js-16-deploy-on-netlify/)). Limits are credit-based; confirm them on Netlify's pricing page.
-- Vercel's Hobby plan is restricted to personal, non-commercial use ([terms](https://vercel.com/legal/terms)), so a company site on Vercel needs a paid Pro plan. Choose Vercel Pro if you prefer the Next.js vendor's platform and accept the monthly cost.
+Vercel's Hobby (free) plan is limited to personal, non-commercial use ([terms](https://vercel.com/legal/terms)); a company website is commercial use. Vercel can pause Hobby projects that break this. Use a **Pro** team for this project, or move to a host whose free plan allows commercial use (Netlify, see the end of this file). This is the company's decision; it is recorded here so it is not forgotten.
 
-Re-check both before signing up; plans change.
+## Environment variables (Project, Settings, Environment Variables)
 
-## Netlify steps
+| Key | Value | Environments |
+|---|---|---|
+| `NEXT_PUBLIC_SITE_URL` | `https://syntaxflowllc.com` | Production |
+| `INQUIRY_DELIVERY` | `emailjs` | Production, Preview |
+| `EMAILJS_SERVICE_ID` | `service_d6czg85` | Production, Preview |
+| `EMAILJS_TEMPLATE_ID` | `template_v26pcko` | Production, Preview |
+| `EMAILJS_PUBLIC_KEY` | from EmailJS, Account, General | Production, Preview |
+| `EMAILJS_PRIVATE_KEY` | from EmailJS, Account, Security (mark **Sensitive**) | Production, Preview |
 
-1. Create a Netlify account (use a company login, enable MFA).
-2. **Add new site, Import an existing project, GitHub**, and select `AKGANG10/Syntax-Flow-llc`, branch `main`. Netlify detects Next.js: build command `npm run build`. Set Node.js to 24 (environment variable `NODE_VERSION=24`).
-3. **Site configuration, Environment variables** (mark the private key as secret):
+Never set `E2E_TEST_MODE` or `EMAILJS_API_URL` on Vercel. Preview deployments are kept out of search engines automatically (`VERCEL_ENV=preview`).
 
-   | Key | Value | Scopes |
-   |---|---|---|
-   | `NEXT_PUBLIC_SITE_URL` | `https://syntaxflowllc.com` | Production |
-   | `INQUIRY_DELIVERY` | `emailjs` | All |
-   | `EMAILJS_SERVICE_ID` | from EmailJS | All |
-   | `EMAILJS_TEMPLATE_ID` | `template_v26pcko` | All |
-   | `EMAILJS_PUBLIC_KEY` | from EmailJS | All |
-   | `EMAILJS_PRIVATE_KEY` | from EmailJS (secret) | All |
-   | `SITE_INDEXABLE` | `false` | Deploy previews and branch deploys only |
+Environment variable changes apply to the **next** deployment: redeploy after adding them (Deployments, latest, Redeploy).
 
-   Never set `E2E_TEST_MODE` on Netlify.
-4. Deploy. On the generated `*.netlify.app` URL, run the smoke test below **before** touching DNS.
-5. **Domain management:** add `syntaxflowllc.com` as the primary domain and `www.syntaxflowllc.com` as an alias. Netlify shows the exact records; apply them in GoDaddy following docs/DOMAIN_DNS.md (change only the apex A and `www` CNAME).
-6. Wait for HTTPS to be issued, then repeat the smoke test on the real domain and complete the DNS verification list.
+## Git integration
 
-## Smoke test (each deploy)
+The repository shows no Vercel deployment records, which suggests the project was deployed with the CLI or by upload rather than connected to GitHub. Connect it (Project, Settings, Git, Connect `AKGANG10/Syntax-Flow-llc`, production branch `main`) so every push to `main` deploys automatically and pull requests get preview URLs.
 
-- [ ] Home, Technology + Talent, Contact, Careers load; no console errors
+## Custom domain (Project, Settings, Domains)
+
+1. Add `syntaxflowllc.com`, then `www.syntaxflowllc.com`. Set the apex as primary and let Vercel redirect `www` (the app also redirects `www` itself, so either works).
+2. Vercel shows the exact records to create. Apply them in GoDaddy following docs/DOMAIN_DNS.md: change **only** the apex A record(s) and the `www` CNAME. Keep every MX and TXT record.
+3. Wait for Vercel to show the domain as valid and the certificate as issued.
+4. Run the smoke test below on `https://syntaxflowllc.com` and complete the verification list in docs/DOMAIN_DNS.md.
+
+## Smoke test (each production deploy)
+
+- [ ] Home, Technology + Talent, Contact, Careers load without console errors
 - [ ] Mobile menu opens and navigates
-- [ ] One technology inquiry and one talent network sign-up arrive by email with matching references
-- [ ] `/api/inquiry` with a wrong origin returns 403 (`curl -X POST -H "content-type: application/json" -H "origin: https://example.com" https://<host>/api/inquiry -d "{}"`)
+- [ ] One technology inquiry and one talent network sign-up arrive at hr@syntaxflowllc.com with matching references, and Reply-To is the visitor
+- [ ] `curl -X POST -H "content-type: application/json" -H "origin: https://example.com" https://syntaxflowllc.com/api/inquiry -d "{}"` returns 403
 - [ ] Response headers include `content-security-policy` and `strict-transport-security`
-- [ ] Preview deploys serve `robots.txt` with `Disallow: /`
 
-## Notes for this host
+Rollback: Deployments, choose the last good deployment, **Promote to Production** (or Instant Rollback).
 
-- Serverless functions run as several instances, so the in-memory rate limit is approximate (ADR-005). Acceptable at launch volume; move to a shared store before paid campaigns.
-- Rollback: Netlify keeps previous deploys; use **Deploys, select a previous deploy, Publish deploy**.
+## Notes for Vercel
+
+- Functions run as several instances, so the in-memory rate limit is approximate (ADR-005). Fine at launch volume; move to a shared store (for example Upstash Redis from the Vercel Marketplace) before paid campaigns.
+- Vercel sets `x-forwarded-for` itself, so the rate limiter's client key is trustworthy there.
+
+## Alternative: Netlify Free
+
+Netlify's free plan allows commercial use and supports Next.js 16 ([forum answer](https://answers.netlify.com/t/can-we-use-netlify-free-plan-for-commercial-purposes/41545), [changelog](https://www.netlify.com/changelog/next-js-16-deploy-on-netlify/)). Import the GitHub repo, set `NODE_VERSION=24` and the same variables as above (use `SITE_INDEXABLE=false` on deploy previews), then follow the same domain steps.

@@ -78,6 +78,15 @@ test("returns field errors for invalid input", async ({ request }) => {
   expect(Object.keys(body.fields)).toEqual(expect.arrayContaining(["email", "roles", "headcount"]));
 });
 
+test("missing required fields get plain-language messages", async ({ request }) => {
+  // Found on production: absent fields used to return zod's raw "expected string" text.
+  const res = await post(request, { kind: "talent", elapsedMs: 9000 });
+  expect(res.status()).toBe(400);
+  const { fields } = await res.json();
+  expect(fields).toMatchObject({ name: "Enter your name.", email: "Enter a valid email address.", company: "Enter your company name." });
+  for (const message of Object.values(fields) as string[]) expect(message).not.toMatch(/Invalid input|expected/i);
+});
+
 test("rejects unknown inquiry kinds", async ({ request }) => {
   const res = await post(request, valid({ kind: "admin" }));
   expect(res.status()).toBe(400);
