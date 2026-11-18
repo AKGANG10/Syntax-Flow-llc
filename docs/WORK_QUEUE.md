@@ -36,7 +36,7 @@ Status as of 2026-11-18: **IMPLEMENTED and TESTED.** Not deployed. Not release r
 | # | Item | Needs | Acceptance |
 |---|---|---|---|
 | 1 | EmailJS Public Key and Private Key (Service ID `service_d6czg85` and Template ID received) | Company | Entered in Vercel environment variables; docs/EMAIL_SETUP.md section 5 all checked |
-| 2 | Vercel: deployed at https://syntax-flow-llc.vercel.app (smoke test passed 2026-11-18). Remaining: Pro plan decision, Git integration, env vars | Company, or CLI login on this machine | docs/DEPLOY.md checklist complete |
+| 2 | Vercel: deployed at https://syntax-flow-llc.vercel.app, auto-deploys from `main` (smoke test passed 2026-11-18). Remaining: Pro plan decision, environment variables | Company, or CLI login on this machine | docs/DEPLOY.md checklist complete |
 | 3 | DNS change at GoDaddy (apex A and www CNAME only) | Company login, or company applies it | docs/DOMAIN_DNS.md verification list checked |
 | 4 | Legal review of Privacy and Terms; retention policy | Counsel | Draft banners removed (`draft={false}`) |
 | 5 | Confirm statements in docs/CONTENT_INVENTORY.md | Company | Each confirmed or edited |

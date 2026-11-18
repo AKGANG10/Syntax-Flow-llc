@@ -25,7 +25,7 @@ Environment variable changes apply to the **next** deployment: redeploy after ad
 
 ## Git integration
 
-The repository shows no Vercel deployment records, which suggests the project was deployed with the CLI or by upload rather than connected to GitHub. Connect it (Project, Settings, Git, Connect `AKGANG10/Syntax-Flow-llc`, production branch `main`) so every push to `main` deploys automatically and pull requests get preview URLs.
+Confirmed 2026-11-18: a push to `main` (commit `9c26505`) reached production automatically within minutes, so the project deploys from GitHub. GitHub shows no deployment records for it; that only affects the repository's "Environments" panel, not deploys.
 
 ## Custom domain (Project, Settings, Domains)
 
