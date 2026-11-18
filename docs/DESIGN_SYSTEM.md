@@ -10,7 +10,7 @@ The site reads that as the company's two connected capabilities:
 |---|---|---|
 | Fine blue strands, filled blue nodes | Technology: many systems | Technology markers, capability cards |
 | Bold navy strands, open rings | Talent: the people who carry the work | Talent markers, people chips |
-| Blue disk inside a navy ring (the "o") | Technology + Talent together | "Both" markers, favicon, success state |
+| Blue disk inside a navy ring (the "o") | Technology + Talent together | "Both" markers, success state |
 | Pinch points | Where the work happens: a project, a hire | Hero composition |
 | Rise to the right | Growth and scale | Hero, lifecycle |
 

@@ -57,7 +57,7 @@ Each entry: context, decision, trade-offs, and the trigger that should reopen it
 
 ## ADR-009: Header wordmark derived from the supplied raster logo
 
-**Decision.** `scripts/prepare-brand-assets.mjs` makes transparent PNGs from the supplied logo with a colour-to-alpha pass. The favicon uses the filled "o" of "Flow" (blue disk in a navy ring).
+**Decision.** `scripts/prepare-brand-assets.mjs` makes transparent PNGs from the supplied logo with a colour-to-alpha pass. Browser icons come from the real logo (owner request, 2026-11-18): `favicon.ico` (16, 32, 48) and `icon.png` use a tight crop of the logo's wave; `apple-icon.png` uses the full logo with the name.
 **Revisit when** official vector (SVG) logo files are available. Replace the PNGs and keep the same file names.
 
 ## ADR-010: 3D hero with three.js, code-split and capability-gated (2026-11-18)

@@ -80,7 +80,8 @@ test("the renamed Technology + Talent URL redirects permanently", async ({ reque
 test("hero uses WebGL on capable desktops and 2D canvas elsewhere", async ({ page, isMobile }) => {
   await page.goto("/");
   const hero = page.locator("main canvas[data-renderer]").first();
-  await expect(hero).toHaveAttribute("data-motion", "animated");
+  // The 3D scene starts when the browser is idle and compiles in a worker, so allow for a busy machine.
+  await expect(hero).toHaveAttribute("data-motion", "animated", { timeout: 25_000 });
   const renderer = await hero.getAttribute("data-renderer");
   if (isMobile) expect(renderer).toBe("2d");
   else expect(["webgl", "2d"]).toContain(renderer);
@@ -96,5 +97,5 @@ test("hero animation respects reduced motion", async ({ browser }) => {
 
 test("hero animation runs by default", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator("main canvas[data-motion]").first()).toHaveAttribute("data-motion", "animated");
+  await expect(page.locator("main canvas[data-motion]").first()).toHaveAttribute("data-motion", "animated", { timeout: 25_000 });
 });
