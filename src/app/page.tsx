@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { DashboardShowcase } from "@/components/dashboard/showcase";
+import { HeroFragments } from "@/components/dashboard/hero-fragments";
 import { Magnetic } from "@/components/effects";
 import { HeroScene } from "@/components/hero-scene";
 import { IndustryRail } from "@/components/industry-rail";
 import { WordReveal } from "@/components/intro";
 import { NeedCards } from "@/components/need-cards";
 import { PhotoFrame } from "@/components/photo-frame";
+import { ServicePillars } from "@/components/service-pillars";
 import { SolutionsGrid } from "@/components/solutions-grid";
 import { TalentEquation, TalentNetwork } from "@/components/talent-network";
 import { TheFlow } from "@/components/the-flow";
@@ -16,7 +19,7 @@ import type { MediaKey } from "@/content/media";
 import { company, formattedAddress } from "@/content/site";
 
 export const metadata: Metadata = {
-  title: { absolute: "Syntax Flow | Technology and Talent Solutions" },
+  title: { absolute: "Syntax Flow | IT Services, IT Consulting and IT Recruitment" },
   alternates: { canonical: "/" },
 };
 
@@ -45,18 +48,19 @@ export default function HomePage() {
           />
         </div>
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,var(--color-paper)_0%,rgb(246_249_251/0.94)_34%,rgb(246_249_251/0)_60%)] max-lg:hidden" />
+        <HeroFragments />
 
         <Container className="flex flex-col justify-start pt-[calc(var(--header-h)+3.5rem)] pb-4 sm:pt-[calc(var(--header-h)+5rem)] lg:min-h-[max(42rem,100svh)] lg:justify-center lg:pt-[var(--header-h)] lg:pb-20">
           <div className="max-w-[42rem]">
             <div className="fade-up" style={{ ["--d" as string]: "80ms" }}>
-              <Eyebrow>{company.tagline}</Eyebrow>
+              <Eyebrow>{company.category}</Eyebrow>
             </div>
             <WordReveal as="h1" text="Build what’s next." className="t-display mt-6 block text-ink-950" delay={150} />
             <p className="fade-up mt-6 text-[clamp(1.25rem,1.05rem+0.9vw,1.75rem)] font-semibold tracking-[-0.02em] text-ink-800" style={{ ["--d" as string]: "520ms" }}>
               Technology. Talent. <span className="text-flow-700">Transformation.</span>
             </p>
             <p className="fade-up t-lead mt-5 max-w-xl text-ink-600" style={{ ["--d" as string]: "640ms" }}>
-              We help ambitious organizations build, modernize and scale through intelligent technology and exceptional technical talent.
+              An IT services and IT consulting company and a US IT recruitment firm. We help ambitious organizations build, modernize and scale with intelligent technology and exceptional technical talent.
             </p>
             <div className="fade-up mt-9 flex flex-wrap gap-3" style={{ ["--d" as string]: "760ms" }}>
               <Magnetic>
@@ -91,8 +95,11 @@ export default function HomePage() {
         </Container>
       </section>
 
+      {/* WHAT WE DO: IT services, IT consulting, IT recruitment */}
+      <ServicePillars id="home-what" tone="white" />
+
       {/* STATEMENT */}
-      <Section tone="white" aria-label="What we believe">
+      <Section aria-label="What we believe">
         <Container>
           <p className="scrub-text max-w-5xl text-[clamp(1.9rem,1.2rem+3vw,4rem)] leading-[1.08] font-extrabold tracking-[-0.04em] text-ink-950">
             Technology needs people. People need the right technology. Syntax Flow connects both, from the first question to the team that runs it.
@@ -124,33 +131,8 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      {/* TALENT: people flow */}
-      <Section tone="ink" aria-labelledby="home-talent" className="noise overflow-hidden">
-        <div aria-hidden="true" className="bg-grid-dark mask-fade-y pointer-events-none absolute inset-0" />
-        <Container className="relative">
-          <Eyebrow tone="dark">Talent</Eyebrow>
-          <h2 id="home-talent" className="sr-only">
-            Technology plus people equals transformation
-          </h2>
-          <div className="mt-6">
-            <TalentEquation />
-          </div>
-          <p className="t-lead mt-6 max-w-2xl text-ink-300">
-            Every system needs people who can build it, run it and improve it. Explore the roles we recruit and the teams we assemble.
-          </p>
-          <div className="mt-14">
-            <TalentNetwork />
-          </div>
-          <div className="mt-12 flex flex-wrap gap-3">
-            <ButtonLink href="/contact?need=talent" variant="invert">
-              Find Talent
-            </ButtonLink>
-            <ButtonLink href="/careers" variant="outline-invert">
-              Join Our Network
-            </ButtonLink>
-          </div>
-        </Container>
-      </Section>
+      {/* DASHBOARDS: see the system in motion */}
+      <DashboardShowcase />
 
       {/* HUMAN ENVIRONMENT */}
       <Section tone="white" aria-labelledby="home-human" className="overflow-hidden">
@@ -187,8 +169,33 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      {/* INDUSTRIES: global flow */}
-      <IndustryRail items={industries} />
+      {/* TALENT: people flow */}
+      <Section tone="ink" aria-labelledby="home-talent" className="noise overflow-hidden">
+        <div aria-hidden="true" className="bg-grid-dark mask-fade-y pointer-events-none absolute inset-0" />
+        <Container className="relative">
+          <Eyebrow tone="dark">Talent</Eyebrow>
+          <h2 id="home-talent" className="sr-only">
+            Technology plus people equals transformation
+          </h2>
+          <div className="mt-6">
+            <TalentEquation />
+          </div>
+          <p className="t-lead mt-6 max-w-2xl text-ink-300">
+            Every system needs people who can build it, run it and improve it. Explore the roles we recruit and the teams we assemble.
+          </p>
+          <div className="mt-14">
+            <TalentNetwork />
+          </div>
+          <div className="mt-12 flex flex-wrap gap-3">
+            <ButtonLink href="/contact?need=talent" variant="invert">
+              Find Talent
+            </ButtonLink>
+            <ButtonLink href="/careers" variant="outline-invert">
+              Join Our Network
+            </ButtonLink>
+          </div>
+        </Container>
+      </Section>
 
       {/* PROOF: project flow */}
       <Section aria-labelledby="home-proof">
@@ -237,6 +244,9 @@ export default function HomePage() {
           </div>
         </Container>
       </Section>
+
+      {/* INDUSTRIES: global flow */}
+      <IndustryRail items={industries} />
 
       <CtaBand
         title="Tell us what you need to build."

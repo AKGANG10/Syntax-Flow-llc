@@ -15,6 +15,7 @@ const routes = [
   "/solutions/talent",
   "/solutions",
   "/solutions/transformation",
+  "/platform",
   "/industries",
   "/work",
   "/company",
