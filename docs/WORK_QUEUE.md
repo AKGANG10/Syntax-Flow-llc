@@ -37,7 +37,7 @@ Status as of 2026-11-18: **IMPLEMENTED and TESTED.** Not deployed. Not release r
 |---|---|---|---|
 | 1 | EmailJS Public Key and Private Key. Service ID `service_53cnnxd` and Template ID `template_6m1tuud` are set in Vercel | Company | Both keys in Vercel; docs/EMAIL_SETUP.md section 5 all checked |
 | 2 | Vercel: deployed, auto-deploys from `main`. Set 2026-11-18: `NEXT_PUBLIC_SITE_URL`, `INQUIRY_DELIVERY`, `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`; apex and www domains added. Remaining: Pro plan decision | Company | Project on a plan that permits commercial use |
-| 3 | GoDaddy: two A records and one CNAME (exact values in docs/DOMAIN_DNS.md) | Company login | `vercel domains verify` reports valid; docs/DOMAIN_DNS.md verification list checked |
+| 3 | ~~GoDaddy DNS change~~ **Done 2026-11-18.** Site live on https://syntaxflowllc.com with HTTPS; email records verified unchanged | | Only remaining check: outside test email to hr@ |
 | 4 | Legal review of Privacy and Terms; retention policy | Counsel | Draft banners removed (`draft={false}`) |
 | 5 | Confirm statements in docs/CONTENT_INVENTORY.md | Company | Each confirmed or edited |
 | 6 | E-Verify and Right to Work posters (English, Spanish) from the E-Verify account | Company | PDFs hosted and linked on Careers; placeholder removed |

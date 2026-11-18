@@ -25,6 +25,20 @@ Mail for the company runs on Google Workspace. DMARC is at `p=quarantine`, so ma
 
 The website's form emails pass DMARC only if EmailJS sends through the Google Workspace account (see docs/EMAIL_SETUP.md).
 
+## Applied 2026-11-18: site live on https://syntaxflowllc.com
+
+Syntax Flow applied the change set below in GoDaddy. Verified the same day:
+
+- Authoritative (ns39.domaincontrol.com), Google (8.8.8.8) and Cloudflare (1.1.1.1) all return A `216.198.79.1`, `64.29.17.1` and `www` CNAME `2248303600f2e8ab.vercel-dns-017.com`.
+- `vercel domains verify`: both hostnames "configured_correctly".
+- Certificate: Let's Encrypt, CN syntaxflowllc.com, renews automatically (first expiry 2027-02-16).
+- `http` to `https` and `www` to apex: permanent 308 redirects, path preserved.
+- All 12 pages 200, 404 for unknown paths, security headers present, sitemap on the apex.
+- Real browser (Edge, 1440px and 390px): no console or network errors, no horizontal overflow.
+- **Email records unchanged:** 5 Google MX, SPF (resolving to `_spf.google.com`), site verification, DMARC `p=quarantine`, DKIM `google._domainkey`.
+
+Remaining from the verification list: a test email to hr@syntaxflowllc.com from an outside account, and form delivery once the EmailJS keys are set.
+
 ## Go-live change set for Vercel
 
 Both `syntaxflowllc.com` and `www.syntaxflowllc.com` were added to the Vercel project `syntax-flow-llc` on 2026-11-18. Vercel's recommended records (from `vercel domains verify`, 2026-11-18):

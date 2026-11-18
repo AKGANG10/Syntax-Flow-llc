@@ -2,7 +2,7 @@
 
 Marketing and lead-generation site for **Syntax Flow LLC**, a technology and talent solutions company in Dallas, Texas. It presents both pillars (Technology and Talent), the combined Technology + Talent offer, and routes visitors into the right inquiry: technology, talent, both, or joining the talent network.
 
-Status: **implemented and tested locally, not deployed.** Canonical URL: https://syntaxflowllc.com. See [docs/WORK_QUEUE.md](docs/WORK_QUEUE.md) for evidence and what is left before launch, and [docs/DEPLOY.md](docs/DEPLOY.md) to go live.
+Status: **live at https://syntaxflowllc.com** (Vercel). Contact forms show a fallback until the EmailJS keys are set. Canonical URL: https://syntaxflowllc.com. See [docs/WORK_QUEUE.md](docs/WORK_QUEUE.md) for evidence and what is left before launch, and [docs/DEPLOY.md](docs/DEPLOY.md) to go live.
 
 ## Stack
 
