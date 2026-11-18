@@ -7,13 +7,16 @@ The website's forms post to `POST /api/inquiry`. After validation, the server se
 ## 1. EmailJS account
 
 1. Create or use the company EmailJS account (record the account owner; enable MFA).
-2. **Email Services:** connect the mailbox that will send (ideally a Google Workspace or Microsoft 365 account on syntaxflowllc.com). Note the **Service ID**.
+2. **Email Services:** add a **Gmail** service and sign in with the company's **Google Workspace** account (for example hr@syntaxflowllc.com). Note the **Service ID**.
+   This is required, not a preference: the domain's DMARC policy is `p=quarantine` and its SPF and DKIM authorize only Google (docs/DOMAIN_DNS.md). Mail sent through any other EmailJS service as @syntaxflowllc.com would fail alignment and go to spam.
 3. **Account, Security:** enable API access for non-browser applications (server-side calls), and enable the private key requirement. Note the **Public Key** and **Private Key**.
 4. **Account, Security:** restrict allowed origins to the production domain if your plan offers it.
 
 ## 2. Template
 
-Create a plain-text template (Template ID into `EMAILJS_TEMPLATE_ID`):
+**Template ID supplied by Syntax Flow: `template_v26pcko`** (recorded in `.env.example`; template IDs are not secret).
+
+The server sends two sets of variable names, so the template works whether it uses the style below or EmailJS's stock "Contact Us" variables (`{{name}}`, `{{email}}`, `{{title}}`, `{{message}}`, `{{time}}`). Recommended template settings:
 
 | Field | Value |
 |---|---|
@@ -23,7 +26,11 @@ Create a plain-text template (Template ID into `EMAILJS_TEMPLATE_ID`):
 | Subject | `{{subject}}` |
 | Body | `{{body}}` |
 
-Parameters the server sends: `subject`, `inquiry_type`, `reference`, `from_name`, `reply_to`, `submitted_at`, `body` (all fields as labelled plain text).
+Parameters the server sends: `subject`, `inquiry_type`, `reference`, `from_name`, `reply_to`, `submitted_at`, `body` (all fields as labelled plain text), plus the stock aliases `title` (= subject), `name`, `email` (= reply_to), `message` (= body), `time`, `phone`, `company`.
+
+Whatever the template contains, check that **Reply-To** is set to `{{reply_to}}` (or `{{email}}`), otherwise replies go to the company's own address instead of the visitor.
+
+The request shape (service, template, keys, parameters) is covered by an automated test against a local EmailJS mock (`e2e/email-delivery.spec.ts`). That proves the code; only a real send proves the account and template.
 
 Optional: a second template for talent network sign-ups in `EMAILJS_TEMPLATE_ID_CANDIDATE` (for example routed to a recruiting inbox).
 
@@ -44,7 +51,7 @@ If `INQUIRY_DELIVERY` is unset or credentials are missing in production, forms s
 
 ## 4. Domain authentication
 
-Before launch, inspect existing DNS (MX, SPF, DKIM, DMARC) for syntaxflowllc.com. Merge, never duplicate, SPF. Enable DKIM for the sending mailbox provider. Publish or confirm DMARC. Follow the constitution's domain and email checklist.
+Inspected 2026-11-18 (docs/DOMAIN_DNS.md): Google Workspace MX, SPF resolving to `include:_spf.google.com`, Google DKIM (`google._domainkey`) and DMARC `p=quarantine` are all in place. No DNS change is needed for email, provided EmailJS sends through the Gmail/Workspace service (step 1.2). Do not add a second SPF record.
 
 ## 5. Verification (must pass before launch)
 

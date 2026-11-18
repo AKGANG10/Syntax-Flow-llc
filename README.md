@@ -2,7 +2,7 @@
 
 Marketing and lead-generation site for **Syntax Flow LLC**, a technology and talent solutions company in Dallas, Texas. It presents both pillars (Technology and Talent), the combined Technology + Talent offer, and routes visitors into the right inquiry: technology, talent, both, or joining the talent network.
 
-Status: **implemented and tested locally, not deployed.** See [docs/WORK_QUEUE.md](docs/WORK_QUEUE.md) for what is left before launch.
+Status: **implemented and tested locally, not deployed.** Canonical URL: https://syntaxflowllc.com. See [docs/WORK_QUEUE.md](docs/WORK_QUEUE.md) for evidence and what is left before launch, and [docs/DEPLOY.md](docs/DEPLOY.md) to go live.
 
 ## Stack
 
@@ -69,4 +69,6 @@ docs/               decisions, design system, security, content inventory, work 
 - [docs/SECURITY.md](docs/SECURITY.md): controls, known limitations, hardening steps
 - [docs/CONTENT_INVENTORY.md](docs/CONTENT_INVENTORY.md): placeholders and claims the company must supply or confirm
 - [docs/EMAIL_SETUP.md](docs/EMAIL_SETUP.md): EmailJS configuration and verification
-- [docs/WORK_QUEUE.md](docs/WORK_QUEUE.md): prioritized remaining work
+- [docs/DOMAIN_DNS.md](docs/DOMAIN_DNS.md): DNS snapshot for syntaxflowllc.com and the safe go-live change set
+- [docs/DEPLOY.md](docs/DEPLOY.md): hosting recommendation, environment variables, smoke test
+- [docs/WORK_QUEUE.md](docs/WORK_QUEUE.md): evidence and prioritized remaining work

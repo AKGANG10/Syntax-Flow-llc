@@ -242,13 +242,15 @@
   }
 }
 
+/*
+ * Movement only, no fade: a scroll-linked fade leaves cards just below the
+ * fold stuck at low opacity (and low contrast) until the visitor scrolls.
+ */
 @keyframes reveal-up {
   from {
-    opacity: 0;
-    transform: translateY(28px);
+    transform: translateY(32px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }

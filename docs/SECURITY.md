@@ -22,6 +22,10 @@ Scope: this marketing website and its inquiry endpoint. The Trust page (`src/app
 | No cookies, analytics or third-party scripts | whole site | CSP blocks third-party origins |
 | Dependency audit of production packages in CI | `.github/workflows/ci.yml` | CI |
 | Responsible disclosure contact | `public/.well-known/security.txt`, Trust page | pages spec |
+| `www` to apex permanent redirect | `next.config.ts` | email-delivery spec |
+| Unconfigured production refuses inquiries (503), provider errors surface (502) | `deliver.ts`, route | email-delivery spec |
+
+The EmailJS endpoint can be redirected to a mock only when `E2E_TEST_MODE=1` (`EMAILJS_API_URL`). Neither variable may be set on a deployment.
 
 ## Known limitations
 

@@ -31,7 +31,7 @@ What the company supplied, what is still missing, and which statements need conf
 | Data handling and retention policy | Trust, Privacy | Retention periods, internal access, deletion process |
 | Certifications and compliance | Trust | Only those actually held |
 | Technology partnerships | Trust | Only active, displayable programs |
-| E-Verify and Right to Work posters | Careers | Link official posters (English and Spanish) from e-verify.gov |
+| E-Verify and Right to Work posters | Careers | Download the official English and Spanish posters from the company's E-Verify account (View Essential Resources) and host them on the site. E-Verify does not permit linking official posters from external websites ([FAQ](https://www.e-verify.gov/faq/can-e-verify-posters-be-downloaded-or-linked-electronically-to-external-web-sites)) |
 | Privacy notice and Terms legal review | Privacy, Terms | Both are drafts with a visible banner |
 
 ## Statements to confirm
@@ -45,7 +45,7 @@ These are written as company commitments. Confirm each is true or edit it:
 5. Company: the four "How we work" principles.
 6. Home: "We publish client results only with permission and with real, checked numbers."
 7. Company: the brand story line, "Many strands of technology and people, converging where the work happens and moving forward together."
-8. Canonical domain: `https://syntaxflowllc.com` (apex) is assumed from the email domain. Confirm apex or `www`.
+8. ~~Canonical domain~~ Confirmed 2026-11-18: `https://syntaxflowllc.com` (apex); `www` redirects to it.
 9. Contact email: hr@syntaxflowllc.com is used for all inquiries. Consider role aliases (`hello@`, `sales@`, `talent@`, `security@`).
 
 ## Illustrative content

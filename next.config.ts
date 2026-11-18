@@ -43,6 +43,10 @@ const securityHeaders = [
   },
 ];
 
+// Canonical host is the apex (confirmed 2026-11-18). www redirects to it on any host.
+const canonical = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://syntaxflowllc.com");
+const wwwHost = canonical.hostname.startsWith("www.") ? null : `www.${canonical.hostname}`;
+
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
@@ -57,6 +61,17 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  async redirects() {
+    if (!wwwHost) return [];
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: wwwHost }],
+        destination: `${canonical.origin}/:path*`,
+        permanent: true,
+      },
+    ];
   },
   async headers() {
     return [

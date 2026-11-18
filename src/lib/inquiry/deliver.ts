@@ -29,6 +29,12 @@ export type DeliveryResult =
 const EMAILJS_ENDPOINT = "https://api.emailjs.com/api/v1.0/email/send";
 const TIMEOUT_MS = 10_000;
 
+/** E2E only: point the real adapter at a local mock. Ignored outside test mode. */
+function emailjsEndpoint() {
+  const override = process.env.E2E_TEST_MODE === "1" ? process.env.EMAILJS_API_URL : undefined;
+  return override || EMAILJS_ENDPOINT;
+}
+
 function mode(): "emailjs" | "log" | null {
   const configured = process.env.INQUIRY_DELIVERY?.trim().toLowerCase();
   const isProd = process.env.NODE_ENV === "production";
@@ -127,8 +133,11 @@ export async function deliver(inq: Inquiry, reference: string): Promise<Delivery
   const privateKey = process.env.EMAILJS_PRIVATE_KEY;
   if (!serviceId || !templateId || !publicKey || !privateKey) return { ok: false, reason: "not_configured" };
 
+  const subject = `${kindLabel[inq.kind]} from ${inq.name} (${reference})`;
+  const body = summarize(inq, reference, submittedAt);
+
   try {
-    const res = await fetch(EMAILJS_ENDPOINT, {
+    const res = await fetch(emailjsEndpoint(), {
       method: "POST",
       headers: { "content-type": "application/json" },
       signal: AbortSignal.timeout(TIMEOUT_MS),
@@ -138,13 +147,21 @@ export async function deliver(inq: Inquiry, reference: string): Promise<Delivery
         user_id: publicKey,
         accessToken: privateKey,
         template_params: {
-          subject: `${kindLabel[inq.kind]} from ${inq.name} (${reference})`,
+          subject,
           inquiry_type: kindLabel[inq.kind],
           reference,
           from_name: inq.name,
           reply_to: inq.email,
           submitted_at: submittedAt,
-          body: summarize(inq, reference, submittedAt),
+          body,
+          // Aliases for EmailJS's stock templates, so either variable style fills in.
+          title: subject,
+          name: inq.name,
+          email: inq.email,
+          message: body,
+          time: submittedAt,
+          phone: inq.phone,
+          company: "company" in inq ? inq.company : "",
         },
       }),
     });

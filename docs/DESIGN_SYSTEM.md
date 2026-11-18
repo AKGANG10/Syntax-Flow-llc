@@ -56,6 +56,8 @@ The hero canvas pauses when off-screen or in a background tab, caps device pixel
 
 Scroll reveals use `animation-timeline: view()` inside `@supports`, so browsers without support show content immediately. Nothing waits on JavaScript to become visible.
 
+Reveals move content (translate) but never fade it. A scroll-linked fade leaves cards just below the fold stuck at low opacity until the visitor scrolls, which fails contrast (found by Lighthouse on Careers, fixed 2026-11-18).
+
 ## Components
 
 | Component | File | Notes |

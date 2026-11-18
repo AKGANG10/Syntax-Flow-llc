@@ -23,8 +23,8 @@ export function LifecycleRail({ steps, tone = "light" }: { steps: readonly Step[
   const dark = tone === "dark";
 
   return (
-    <ol className="relative">
-      {/* Desktop strand */}
+    <div className="relative">
+      {/* Desktop strand (decorative, outside the list so the <ol> holds only <li>s) */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 hidden h-[100px] lg:block">
         <svg viewBox="0 0 1000 100" preserveAspectRatio="none" className="h-full w-full overflow-visible">
           {[0.35, 0.7, -0.4].map((p, i) => (
@@ -34,7 +34,7 @@ export function LifecycleRail({ steps, tone = "light" }: { steps: readonly Step[
         </svg>
       </div>
 
-      <div className="grid gap-0 lg:grid-cols-6 lg:gap-6">
+      <ol className="relative grid gap-0 lg:grid-cols-6 lg:gap-6">
         {steps.map((s, i) => {
           const up = i % 2 === 0;
           return (
@@ -61,7 +61,7 @@ export function LifecycleRail({ steps, tone = "light" }: { steps: readonly Step[
             </li>
           );
         })}
-      </div>
-    </ol>
+      </ol>
+    </div>
   );
 }

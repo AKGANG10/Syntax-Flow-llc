@@ -1,38 +1,63 @@
 # Work queue
 
-Status as of 2026-11-18: **IMPLEMENTED and TESTED locally.** Not deployed, not release ready.
+Status as of 2026-11-18: **IMPLEMENTED and TESTED.** Not deployed. Not release ready until the blockers below are closed.
 
-Priority order follows the constitution: launch blockers, then committed requirements, then quality, then enhancements.
+## Evidence (2026-11-18, local production build)
 
-## Launch blockers
+- Lint, type check, production build: pass.
+- Playwright: 66 tests pass on Edge (desktop 1440x900 and Pixel 7), including the real EmailJS adapter against a mock, the unconfigured-production refusal and the www redirect.
+- Lighthouse 13.6 (local `next start`, Edge headless):
 
-| # | Item | Owner | Acceptance |
+  | Page | Mobile perf | Desktop perf | Accessibility | Best practices | SEO |
+  |---|---|---|---|---|---|
+  | Home | 97 | 100 | 100 | 100 | 100 |
+  | Technology + Talent | 99 | 100 | 100 | 100 | 100 |
+  | Contact | 100 | 100 | 100 | 100 | 100 |
+  | Careers | 98 | 100 | 100 | 100 | 100 |
+  | Talent | 99 | 100 | 100 | 100 | 100 |
+  | Trust | 99 | 100 | 100 | 100 | 100 |
+
+  Mobile LCP about 1.1 s, CLS 0. Local numbers; re-measure on the deployed site.
+- `npm audit --omit=dev`: 0 vulnerabilities.
+
+## Done since the first build
+
+- Canonical domain confirmed (apex); `www` permanent redirect added and tested.
+- EmailJS template ID `template_v26pcko` recorded; template variable aliases added; adapter tested against a mock.
+- DNS inspected read-only and a safe go-live change set written (docs/DOMAIN_DNS.md). Google Workspace mail records identified and protected.
+- Hosting compared; Netlify Free recommended (docs/DEPLOY.md).
+- E-Verify poster rule corrected: posters must be hosted on the site, not linked.
+- Lighthouse findings fixed: lifecycle list semantics; scroll reveal no longer fades text.
+
+## Launch blockers (need Syntax Flow)
+
+| # | Item | Needs | Acceptance |
 |---|---|---|---|
-| 1 | Configure EmailJS and pass the verification list | Company + engineer | All boxes in docs/EMAIL_SETUP.md section 5 checked |
-| 2 | Legal review of Privacy and Terms; add retention policy | Company + counsel | Draft banners removed (`draft={false}`) |
-| 3 | Confirm statements in docs/CONTENT_INVENTORY.md | Company | Each confirmed or edited |
-| 4 | Confirm canonical domain (apex or www) | Company | `NEXT_PUBLIC_SITE_URL` set per environment |
-| 5 | DNS inventory, then connect the domain with HTTPS | Engineer, with authorization | Domain checklist complete; email records preserved |
-| 6 | Choose hosting and set up preview + production with `SITE_INDEXABLE=false` on preview | Company decision | Preview not indexable; production smoke test passes |
-| 7 | Link E-Verify and Right to Work posters on Careers | Company | Placeholder removed |
+| 1 | EmailJS Service ID, Public Key, Private Key, with a Gmail service on the Workspace account | Company | Entered as host environment variables; docs/EMAIL_SETUP.md section 5 all checked |
+| 2 | Hosting account (Netlify Free recommended) connected to the GitHub repo | Company signs up | Preview deploy passes the smoke test |
+| 3 | DNS change at GoDaddy (apex A and www CNAME only) | Company login, or company applies it | docs/DOMAIN_DNS.md verification list checked |
+| 4 | Legal review of Privacy and Terms; retention policy | Counsel | Draft banners removed (`draft={false}`) |
+| 5 | Confirm statements in docs/CONTENT_INVENTORY.md | Company | Each confirmed or edited |
+| 6 | E-Verify and Right to Work posters (English, Spanish) from the E-Verify account | Company | PDFs hosted and linked on Careers; placeholder removed |
 
-## Before or soon after launch
+## Soon after launch
 
 | # | Item | Notes |
 |---|---|---|
-| 8 | Supply case studies, leadership, culture, certifications, partnerships | Remove the matching `ContentPending` blocks |
-| 9 | Official vector logo files | Replace PNGs, keep file names (ADR-009) |
-| 10 | Shared-store rate limiting | ADR-005; required before paid traffic |
-| 11 | Uptime and error monitoring for `/api/inquiry` | Alert on 502/503 spikes |
-| 12 | Lighthouse and Core Web Vitals measured on the deployed site | Record scores; target 90+ |
-| 13 | Screen reader pass (NVDA + Edge, VoiceOver + Safari) on Home, Contact, Careers | Automated checks do not replace this |
-| 14 | Safari and Firefox checks | E2E currently runs Edge/Chromium only |
+| 7 | Case studies, leadership, culture, certifications, partnerships | Remove matching `ContentPending` blocks |
+| 8 | Official vector logo files | ADR-009 |
+| 9 | Shared-store rate limiting | ADR-005; before paid traffic |
+| 10 | Uptime and error alerts for `/api/inquiry` | Alert on 502/503 |
+| 11 | Re-run Lighthouse on the live domain | Record here |
+| 12 | Screen reader pass (NVDA + Edge, VoiceOver + Safari) | Home, Contact, Careers |
+| 13 | Safari and Firefox checks | E2E covers Edge/Chromium only |
+| 14 | CAA record and DNSSEC decision | docs/DOMAIN_DNS.md "Later" |
 
 ## Enhancements (not started)
 
 - Insights section once three approved articles exist (ADR-007).
-- Searchable job board and candidate profiles (needs ATS decision and upload security, ADR-006).
-- Guided AI discovery ("What are you trying to build?") per the brief. Must be labelled as AI, keep the deterministic form as fallback, and route to people, not decide.
-- Industry-specific landing pages when there are verified stories per industry.
+- Job board and candidate profiles (needs ATS decision and upload security, ADR-006).
+- Guided AI discovery, clearly labelled as AI, with the form as fallback.
+- Industry landing pages backed by verified stories.
 - HSTS `includeSubDomains` after DNS review (ADR-008).
-- Upgrade `eslint-config-next` when it drops the ESLint 9 dependency tree with advisories.
+- Upgrade `eslint-config-next` past the ESLint 9 advisories.

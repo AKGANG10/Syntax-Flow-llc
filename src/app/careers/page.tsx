@@ -90,7 +90,7 @@ export default function CareersPage() {
               )}
               <ContentPending
                 title="E-Verify and Right to Work notices"
-                note="Link the official E-Verify Participation and IER Right to Work posters (English and Spanish) from e-verify.gov here before accepting applications online."
+                note="Download the official E-Verify Participation and IER Right to Work posters (English and Spanish) from your E-Verify account under View Essential Resources, and host them on this site. E-Verify does not permit linking official posters from external websites."
               />
             </div>
           </div>
