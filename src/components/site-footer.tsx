@@ -18,14 +18,14 @@ async function CopyrightYear() {
 export function SiteFooter() {
   const { address } = company;
   return (
-    <footer className="noise relative isolate overflow-hidden bg-ink-950 text-ink-300">
+    <footer className="noise defer-render relative isolate overflow-hidden bg-ink-950 text-ink-300">
       <FlowField tone="dark" spread={0.3} className="absolute inset-x-0 top-0 -z-10 h-[34rem] w-full opacity-70 [mask-image:linear-gradient(to_bottom,black_40%,transparent)]" />
       <div aria-hidden="true" className="bg-grid-dark mask-fade-y absolute inset-0 -z-10" />
 
       <Container className="pt-28 pb-16 lg:pt-36">
         <WordReveal as="p" text="Build what’s next." className="block text-[clamp(3.25rem,1.5rem+8vw,9.5rem)] leading-[0.92] font-extrabold tracking-[-0.055em] text-white" accentFrom={2} />
         <div className="mt-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="max-w-md text-lg leading-relaxed text-ink-300">Technology and talent, planned together. Tell us what you are building.</p>
+          <p className="max-w-md text-lg leading-relaxed text-ink-300">IT services, IT consulting and US IT recruitment, planned together. Tell us what you are building.</p>
           <Magnetic>
             <Link href="/contact" className={buttonClass("invert")} data-cursor="Talk">
               Let&rsquo;s build what&rsquo;s next

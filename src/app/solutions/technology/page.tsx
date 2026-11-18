@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DashboardEmbed } from "@/components/dashboard/embed";
 import { MiniViz } from "@/components/mini-viz";
 import { PhotoFrame } from "@/components/photo-frame";
 import { ButtonLink, Container, CtaBand, PageHero, Section, SectionHeading, TextLink } from "@/components/ui";
@@ -7,7 +8,7 @@ import { technologyCapabilities, type VizKind } from "@/content/capabilities";
 const capabilityViz: Record<string, VizKind> = { ai: "ai", software: "software", cloud: "cloud", data: "data", security: "security", automation: "managed" };
 
 export const metadata: Metadata = {
-  title: "Technology Solutions: AI, Software, Cloud, Data and Security",
+  title: "IT Services: AI, Software, Cloud, Data and Security",
   description:
     "AI and intelligent systems, software engineering, cloud and DevOps, data and analytics, cybersecurity and automation from Syntax Flow.",
   alternates: { canonical: "/solutions/technology" },
@@ -32,7 +33,7 @@ export default function TechnologyPage() {
   return (
     <>
       <PageHero
-        eyebrow="Solutions / Technology"
+        eyebrow="IT Services"
         title="Technology built to last beyond launch."
         lead="We help organizations build, modernize and scale digital systems, from AI and data platforms to cloud infrastructure and secure enterprise software."
         motifSeed={11}
@@ -77,6 +78,14 @@ export default function TechnologyPage() {
           <PhotoFrame name="build" fallback="software" className="aspect-[21/9] w-full max-sm:aspect-[4/3]" sizes="(min-width: 1280px) 1200px, 100vw" />
         </Container>
       </Section>
+
+      <DashboardEmbed
+        id="tech-dashboard"
+        tab="technology"
+        eyebrow="Technology command center"
+        title="The systems we build, seen as one."
+        lead="Service health, cloud infrastructure, uptime, latency and security posture in a single view: the kind of operational platform our IT services teams design and run."
+      />
 
       <Section aria-labelledby="tech-delivery">
         <Container>

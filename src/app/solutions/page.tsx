@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { PillarNode } from "@/components/journey";
+import { ServicePillars } from "@/components/service-pillars";
 import { SolutionsGrid } from "@/components/solutions-grid";
-import { ArrowIcon, ButtonLink, Container, CtaBand, PageHero, Section, SectionHeading, cx } from "@/components/ui";
+import { ButtonLink, Container, CtaBand, PageHero, Section, SectionHeading, cx } from "@/components/ui";
 import { engagementModels, solutions } from "@/content/capabilities";
 
 export const metadata: Metadata = {
@@ -12,19 +11,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/solutions" },
 };
 
-const paths = [
-  { title: "Technology", text: "Engineering for AI, software, cloud, data and security.", href: "/solutions/technology", pillar: "technology" as const },
-  { title: "Talent", text: "Recruiting, IT staffing and dedicated technical teams.", href: "/solutions/talent", pillar: "talent" as const },
-  { title: "Transformation", text: "The system and the team in one plan.", href: "/solutions/transformation", pillar: "both" as const },
-];
-
 export default function SolutionsPage() {
   return (
     <>
       <PageHero
         eyebrow="Solutions"
         title="Everything it takes to build, staff and scale."
-        lead="Eight capabilities across technology and talent, delivered separately or as one engagement."
+        lead="IT services, IT consulting and US IT recruitment: eight capabilities, delivered separately or as one engagement."
         motifSeed={13}
       >
         <ButtonLink href="/contact">Start a Conversation</ButtonLink>
@@ -33,29 +26,7 @@ export default function SolutionsPage() {
         </ButtonLink>
       </PageHero>
 
-      <Section tone="white" aria-labelledby="solutions-paths">
-        <Container>
-          <SectionHeading id="solutions-paths" eyebrow="Three paths" title="Start from the side you need most." />
-          <ul className="mt-12 grid gap-4 md:grid-cols-3">
-            {paths.map((p) => (
-              <li key={p.href}>
-                <Link
-                  href={p.href}
-                  data-cursor="Explore"
-                  className="group border-flow flex h-full flex-col rounded-[var(--radius-panel)] bg-paper p-8 ring-1 ring-ink-100 transition-shadow hover:shadow-lift"
-                >
-                  <PillarNode pillar={p.pillar} className="size-5" />
-                  <span className="mt-6 text-[1.75rem] font-extrabold tracking-[-0.035em] text-ink-950">{p.title}</span>
-                  <span className="mt-2 flex-1 leading-relaxed text-ink-600">{p.text}</span>
-                  <span className="mt-6 inline-flex items-center gap-1.5 font-semibold text-flow-700">
-                    Explore <ArrowIcon className="transition-transform group-hover:translate-x-1" />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </Section>
+      <ServicePillars id="solutions-what" />
 
       <Section id="all" aria-labelledby="solutions-all" className="noise">
         <div aria-hidden="true" className="bg-grid mask-fade-y pointer-events-none absolute inset-0 opacity-60" />

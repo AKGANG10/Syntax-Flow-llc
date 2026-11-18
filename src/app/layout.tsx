@@ -23,7 +23,7 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Syntax Flow | Technology and Talent Solutions",
+    default: "Syntax Flow | IT Services, IT Consulting and IT Recruitment",
     template: "%s | Syntax Flow",
   },
   description: company.description,
@@ -48,6 +48,9 @@ const organizationJsonLd = {
   legalName: company.legalName,
   url: siteUrl,
   logo: `${siteUrl}/brand/syntax-flow-logo.png`,
+  description: company.description,
+  areaServed: { "@type": "Country", name: "United States" },
+  knowsAbout: ["IT services", "IT consulting", "IT recruitment", "IT staffing", "Software engineering", "Cloud and DevOps", "Data and analytics", "Artificial intelligence", "Cybersecurity"],
   email: company.email,
   telephone: company.phone.e164,
   address: {

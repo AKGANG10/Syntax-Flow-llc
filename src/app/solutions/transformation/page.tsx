@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { EcosystemMap } from "@/components/ecosystem-map";
 import { Journey, JourneyLegend, PillarNode, type JourneyStep } from "@/components/journey";
+import { DashboardEmbed } from "@/components/dashboard/embed";
 import { PhotoFrame } from "@/components/photo-frame";
 import { ButtonLink, Container, CtaBand, PageHero, Section, SectionHeading, cx } from "@/components/ui";
 import { engagementModels } from "@/content/capabilities";
 
 export const metadata: Metadata = {
-  title: "Transformation: Technology and Talent in One Plan",
+  title: "IT Consulting and Digital Transformation",
   description:
     "The right technology and the right people from one partner. Syntax Flow combines technology consulting and engineering with technical talent and dedicated teams.",
   alternates: { canonical: "/solutions/transformation" },
@@ -36,7 +37,7 @@ export default function TechnologyTalentPage() {
   return (
     <>
       <PageHero
-        eyebrow="Solutions / Transformation"
+        eyebrow="IT Consulting · Transformation"
         title={
           <>
             The right technology.
@@ -135,6 +136,14 @@ export default function TechnologyTalentPage() {
           </ul>
         </Container>
       </Section>
+
+      <DashboardEmbed
+        id="tt-dashboard"
+        tab="transformation"
+        eyebrow="Transformation tracking"
+        title="Know exactly where the transformation stands."
+        lead="Phase progress, milestones, project health and a transformation score: the clarity our IT consulting engagements are built around."
+      />
 
       <Section aria-labelledby="tt-transform">
         <Container className="grid gap-12 lg:grid-cols-2 lg:gap-20">

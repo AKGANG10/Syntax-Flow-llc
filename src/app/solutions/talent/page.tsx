@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { DashboardEmbed } from "@/components/dashboard/embed";
 import { PhotoFrame } from "@/components/photo-frame";
 import { TalentEquation, TalentNetwork } from "@/components/talent-network";
 import { ButtonLink, Container, CtaBand, Eyebrow, PageHero, Section, SectionHeading } from "@/components/ui";
 import { talentCapabilities } from "@/content/capabilities";
 
 export const metadata: Metadata = {
-  title: "Talent Solutions: Technical Recruiting, IT Staffing and Dedicated Teams",
+  title: "US IT Recruitment and IT Staffing",
   description:
     "Technical recruiting, IT staffing, contract and direct hire, dedicated engineering teams and workforce solutions from Syntax Flow.",
   alternates: { canonical: "/solutions/talent" },
@@ -33,9 +34,9 @@ export default function TalentPage() {
   return (
     <>
       <PageHero
-        eyebrow="Solutions / Talent"
+        eyebrow="IT Recruitment · USA"
         title="Find the people who can build it."
-        lead="We help organizations find, deploy and manage the technical people they need, from a single specialist to a complete team."
+        lead="A US IT recruitment and staffing partner. We help organizations find, deploy and manage the technical people they need, from a single specialist to a complete team."
         motifSeed={23}
       >
         <ButtonLink href="/contact?need=talent">Find Talent</ButtonLink>
@@ -126,6 +127,14 @@ export default function TalentPage() {
           </ol>
         </Container>
       </Section>
+
+      <DashboardEmbed
+        id="talent-dashboard"
+        tab="talent"
+        eyebrow="Talent intelligence"
+        title="See the talent picture clearly."
+        lead="Available talent, skills coverage, pipeline, locations and experience in one view: how data supports US IT recruitment and staffing decisions."
+      />
 
       <Section aria-labelledby="talent-candidates">
         <Container>

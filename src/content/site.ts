@@ -10,8 +10,10 @@ export const company = {
   legalName: "Syntax Flow LLC",
   shortName: "Syntax Flow",
   tagline: "Technology × Talent",
+  /** Plain category words: say what kind of company this is (see docs/CONTENT_INVENTORY.md). */
+  category: "IT Services · IT Consulting · IT Recruitment",
   description:
-    "Syntax Flow is a technology and talent solutions company. We help organizations build, modernize and scale through intelligent technology and exceptional technical talent.",
+    "Syntax Flow is an IT services and IT consulting company and a US IT recruitment firm, headquartered in Dallas, Texas. We help organizations build, modernize and scale with intelligent technology and exceptional technical talent.",
   email: "hr@syntaxflowllc.com",
   phone: { display: "+1 (409) 225-7834", href: "tel:+14092257834", e164: "+14092257834" },
   address: {
@@ -40,12 +42,13 @@ export const mainNav: NavGroup[] = [
   {
     label: "Solutions",
     children: [
-      { label: "All solutions", href: "/solutions", description: "Eight capabilities across technology and talent." },
-      { label: "Technology", href: "/solutions/technology", description: "AI, software, cloud, data, security and automation." },
-      { label: "Talent", href: "/solutions/talent", description: "Technical recruiting, IT staffing and dedicated teams." },
-      { label: "Transformation", href: "/solutions/transformation", description: "Technology and talent combined in one plan." },
+      { label: "All solutions", href: "/solutions", description: "IT services, IT consulting and IT recruitment." },
+      { label: "Technology", href: "/solutions/technology", description: "IT services: AI, software, cloud, data and security." },
+      { label: "Talent", href: "/solutions/talent", description: "US IT recruitment, IT staffing and dedicated teams." },
+      { label: "Transformation", href: "/solutions/transformation", description: "IT consulting: technology and talent in one plan." },
     ],
   },
+  { label: "Platform", href: "/platform" },
   { label: "Industries", href: "/industries" },
   { label: "Work", href: "/work" },
   { label: "Company", href: "/company" },
@@ -60,6 +63,7 @@ export const footerNav: { heading: string; links: NavLink[] }[] = [
       { label: "Technology", href: "/solutions/technology" },
       { label: "Talent", href: "/solutions/talent" },
       { label: "Transformation", href: "/solutions/transformation" },
+      { label: "Platform demo", href: "/platform" },
       { label: "Industries", href: "/industries" },
     ],
   },
