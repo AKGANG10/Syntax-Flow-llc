@@ -16,6 +16,8 @@ The website's forms post to `POST /api/inquiry`. After validation, the server se
 
 **Template ID supplied by Syntax Flow: `template_6m1tuud`** (recorded in `.env.example`; template IDs are not secret).
 
+**Configured and verified 2026-11-18:** To Email `hr@syntaxflowllc.com`, Reply To `{{reply_to}}`, Subject `{{subject}}`, Content `{{body}}` (the stock auto-reply text was removed). Live test SF-YMAN9HYZ arrived in the hr@ inbox with all fields. Public and Private keys are set in Vercel Production; "API access from non-browser applications" is enabled under Account, Security (without it EmailJS returns 403). If sending fails, the reason is in `vercel logs --environment production` as `[inquiry] ... emailjs rejected: <status> <reason>`.
+
 The server sends two sets of variable names, so the template works whether it uses the style below or EmailJS's stock "Contact Us" variables (`{{name}}`, `{{email}}`, `{{title}}`, `{{message}}`, `{{time}}`). Recommended template settings:
 
 | Field | Value |
