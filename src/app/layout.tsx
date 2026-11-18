@@ -1,0 +1,83 @@
+import type { Metadata, Viewport } from "next";
+import { IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { company, siteUrl } from "@/content/site";
+import "./globals.css";
+
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Syntax Flow | Technology and Talent Solutions",
+    template: "%s | Syntax Flow",
+  },
+  description: company.description,
+  applicationName: company.shortName,
+  openGraph: {
+    type: "website",
+    siteName: company.shortName,
+    locale: "en_US",
+  },
+  twitter: { card: "summary_large_image" },
+  formatDetection: { telephone: false, address: false, email: false },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f6f9fb",
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: company.shortName,
+  legalName: company.legalName,
+  url: siteUrl,
+  logo: `${siteUrl}/brand/syntax-flow-logo.png`,
+  email: company.email,
+  telephone: company.phone.e164,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: company.address.street,
+    addressLocality: company.address.locality,
+    addressRegion: company.address.region,
+    postalCode: company.address.postalCode,
+    addressCountry: company.address.country,
+  },
+};
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return (
+    <html lang="en" className={`${jakarta.variable} ${plexMono.variable} antialiased`}>
+      <body className="flex min-h-dvh flex-col">
+        <a
+          href="#main"
+          className="sr-only z-[60] rounded-full bg-ink-900 px-5 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
+        >
+          Skip to content
+        </a>
+        <SiteHeader />
+        <main id="main" tabIndex={-1} className="flex-1 outline-none">
+          {children}
+        </main>
+        <SiteFooter />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c") }}
+        />
+      </body>
+    </html>
+  );
+}
