@@ -10,7 +10,7 @@ Status: **live at https://syntaxflowllc.com** (Vercel). Contact forms show a fal
 |---|---|
 | Framework | Next.js 16.4 (App Router, Cache Components), React 19.3, TypeScript (strict) |
 | Styling | Tailwind CSS 4.3 with design tokens in `src/app/globals.css` |
-| Motion | CSS, CSS scroll-driven animations, one 2D canvas. No animation libraries |
+| Motion and 3D | three.js 0.187 (hero, code-split, capable desktops only), 2D canvas fallback, CSS scroll-driven animations, small motion hooks. No GSAP, Lenis or Framer Motion |
 | Validation | zod 4 (server only) |
 | Email | EmailJS REST API, called from the server |
 | Tests | Playwright 1.65 against the production build |

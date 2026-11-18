@@ -23,6 +23,8 @@ Each entry: context, decision, trade-offs, and the trigger that should reopen it
 **Trade-offs.** No 3D depth or shader effects. In exchange: no extra JavaScript, works on low-end phones, trivial reduced-motion path.
 **Revisit when** a concrete story needs spatial depth (for example an interactive capability map in 3D) and has a performance budget and a 2D fallback.
 
+> **Superseded in part by ADR-010 (2026-11-18):** the owner's redesign brief explicitly requires 3D and immersive motion. The 2D canvas remains the fallback.
+
 ## ADR-004: EmailJS called from the server, behind a delivery adapter
 
 **Context.** The constitution bundle includes EmailJS setup rules. No email provider credentials exist yet.
@@ -57,3 +59,25 @@ Each entry: context, decision, trade-offs, and the trigger that should reopen it
 
 **Decision.** `scripts/prepare-brand-assets.mjs` makes transparent PNGs from the supplied logo with a colour-to-alpha pass. The favicon uses the filled "o" of "Flow" (blue disk in a navy ring).
 **Revisit when** official vector (SVG) logo files are available. Replace the PNGs and keep the same file names.
+
+## ADR-010: 3D hero with three.js, code-split and capability-gated (2026-11-18)
+
+**Context.** The owner's redesign brief requires a cinematic, immersive, 3D experience with a narrative purpose ("no random rotating sphere").
+**Decision.** A single three.js scene (`flow-core-3d.ts`): technology strands and talent strands with ring nodes converge into a glass core holding the logo's disk-in-ring, then leave as one rising ribbon; cyan pulses travel the strands. Plain three.js, not React Three Fiber or Drei: one scene does not justify the extra dependencies. Strand motion runs in vertex shaders.
+**Gates.** Loaded by dynamic import only when the device has a fine pointer, at least 1024px width, at least 4 cores, WebGL2 and no reduced-motion preference. Everyone else gets the 2D canvas. Render loop pauses off-screen and in background tabs; DPR capped at 1.75; a fresh canvas per mount so React Activity can hide and re-show the page safely.
+**Trade-offs.** 136 KB gzipped (557 KB raw) of JavaScript, measured 2026-11-18, fetched by dynamic import on capable desktops only (not referenced by the initial HTML). Measured with Lighthouse after the change (docs/WORK_QUEUE.md).
+**Revisit when** Lighthouse desktop performance drops below 90 or a lighter technique gives the same story.
+
+## ADR-011: No GSAP, ScrollTrigger, Lenis or Framer Motion (2026-11-18)
+
+**Context.** The brief lists these as possible tools and asks for the minimum necessary dependencies.
+**Decision.** Pinned sections (The Flow, industries rail) use CSS `position: sticky` plus a 60-line `useScrollProgress` hook; reveals, text scrub, photo reveal, parallax and progress use CSS scroll-driven animations as progressive enhancement; micro-interactions (`useMagnetic`, `useTiltCard`, cursor companion) are small hooks. Native scrolling is kept: no smooth-scroll library, because it hijacks scrolling, which the owner's constitution prohibits without strong justification.
+**Revisit when** a sequence needs timeline choreography that these primitives cannot express cleanly.
+
+## ADR-012: Photography from verified Unsplash photos, with procedural fallbacks (2026-11-18)
+
+**Decision.** Ten photos, each verified as free under the Unsplash License (not Unsplash+), recorded in docs/ASSET_LICENSES.md. Unsplash blocks automated downloads, so files are downloaded by a person and imported with `npm run media:import`. `<PhotoFrame>` renders original procedural art until a file exists, so the site never ships a broken or unlicensed image. Industries use original artwork instead of photos.
+
+## ADR-013: Route rename `/solutions/technology-talent` to `/solutions/transformation` (2026-11-18)
+
+**Decision.** Follows the brief's route list. The old URL was live, so it redirects permanently (308) in `next.config.ts`; covered by an E2E test.

@@ -49,6 +49,22 @@ test("accepts a valid inquiry", async ({ request }) => {
   expect(res.headers()["cache-control"]).toContain("no-store");
 });
 
+test("accepts a transformation inquiry with only the core fields", async ({ request }) => {
+  const res = await post(request, {
+    kind: "transformation",
+    name: "Core Only",
+    email: `core-${Date.now()}@example.com`,
+    goal: "Modernize our order platform and the team that runs it.",
+    elapsedMs: 9000,
+  });
+  expect(res.status()).toBe(201);
+});
+
+test("technology inquiries no longer require a timeline", async ({ request }) => {
+  const res = await post(request, { kind: "technology", name: "No Timeline", email: `nt-${Date.now()}@example.com`, project: "A data platform for our operations team.", elapsedMs: 9000 });
+  expect(res.status()).toBe(201);
+});
+
 test("rejects other origins", async ({ request }) => {
   expect((await post(request, valid(), { origin: "https://evil.example" })).status()).toBe(403);
   expect((await post(request, valid(), { origin: null })).status()).toBe(403);

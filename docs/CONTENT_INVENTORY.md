@@ -48,6 +48,12 @@ These are written as company commitments. Confirm each is true or edit it:
 8. ~~Canonical domain~~ Confirmed 2026-11-18: `https://syntaxflowllc.com` (apex); `www` redirects to it.
 9. Contact email: hr@syntaxflowllc.com is used for all inquiries. Consider role aliases (`hello@`, `sales@`, `talent@`, `security@`).
 
+## Supplied in the 2026-11 redesign brief
+
+Used as given: the company principles (Build with purpose, Move with intelligence, Design for scale, People first, Engineer for tomorrow), the eight solutions including **Managed Technology Services**, the Flow steps (Discover, Design, Build, Connect, Scale, Transform) and the industry list (Financial Services, Healthcare, Technology, Retail, Manufacturing, Professional Services, Government, Startups). Education and Logistics, from the original brief, are now mentioned only as "other sectors".
+
+Still missing: **social media profile URLs** (the footer omits social links until real profiles are supplied), the **company timeline** (placeholder on Company), and the **ten photos** (verified, awaiting download: docs/ASSET_LICENSES.md).
+
 ## Illustrative content
 
 The "AI platform" example (Home) and "Modernizing an existing platform" example (Technology + Talent) are labelled on the page as illustrative examples, not client case studies.

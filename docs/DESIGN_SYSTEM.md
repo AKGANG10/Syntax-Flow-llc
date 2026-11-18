@@ -75,3 +75,18 @@ Reveals move content (translate) but never fade it. A scroll-linked fade leaves 
 ## Responsive strategy
 
 Designed separately for phone (single column, strands below the hero copy, menu panel), tablet (two-column grids) and desktop (strands behind copy with a fade, sticky section intros, three-column map with connectors). Verified at 390px and 1440px; E2E tests assert no horizontal scroll on every page at both sizes.
+
+## Experience layer (2026-11 redesign)
+
+One recurring visual language, the **flow**, evolves through the site: data flow (hero), technology flow (solutions mini-visualizations), people flow (talent network), global flow (industries rail), project flow (case-study structure), organization flow (principles) and future flow (footer network).
+
+| Level | Where | Fallback |
+|---|---|---|
+| L5 3D | Hero flow core (three.js), capable desktops | 2D strand canvas; still frame under reduced motion |
+| L4 cinematic | The Flow (pinned, six steps), industries rail (pinned horizontal) | Stacked story and swipeable row on touch, narrow screens and reduced motion |
+| L3 story | Masked word reveals, statement colour scrub, photo clip and grayscale reveal, parallax, scroll progress | Final state shown immediately |
+| L1-L2 | Magnetic buttons, tilt cards with glare, flowing card borders, cursor companion with contextual labels, expanding cards | Plain hover and focus states; cursor companion off on touch |
+
+New tokens: `signal-300..500` (restrained cyan for data pulses and live states only), `--radius-frame`, utilities `bg-grid`, `bg-grid-dark`, `mask-fade-y`, `mask-radial`, `.noise`.
+
+Rules kept from the constitution: text never depends on animation to become visible or readable (scroll reveals move content but never fade it); the native cursor is never hidden; all motion hooks are no-ops under reduced motion or on coarse pointers; important content is never only inside a canvas.

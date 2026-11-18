@@ -4,7 +4,8 @@ const routes = [
   "/",
   "/solutions/technology",
   "/solutions/talent",
-  "/solutions/technology-talent",
+  "/solutions",
+  "/solutions/transformation",
   "/industries",
   "/work",
   "/company",
@@ -64,20 +65,35 @@ test("unknown routes return a real 404", async ({ page }) => {
 
 test("publishes sitemap, robots and security.txt", async ({ request }) => {
   const sitemap = await (await request.get("/sitemap.xml")).text();
-  expect(sitemap).toContain("/solutions/technology-talent");
+  expect(sitemap).toContain("/solutions/transformation");
   expect(await (await request.get("/robots.txt")).text()).toContain("Sitemap:");
   expect(await (await request.get("/.well-known/security.txt")).text()).toContain("Contact: mailto:");
+});
+
+test("the renamed Technology + Talent URL redirects permanently", async ({ request }) => {
+  const res = await request.get("/solutions/technology-talent", { maxRedirects: 0 });
+  expect(res.status()).toBe(308);
+  expect(res.headers()["location"]).toBe("/solutions/transformation");
+});
+
+test("hero uses WebGL on capable desktops and 2D canvas elsewhere", async ({ page, isMobile }) => {
+  await page.goto("/");
+  const hero = page.locator("main canvas[data-renderer]").first();
+  await expect(hero).toHaveAttribute("data-motion", "animated");
+  const renderer = await hero.getAttribute("data-renderer");
+  if (isMobile) expect(renderer).toBe("2d");
+  else expect(["webgl", "2d"]).toContain(renderer);
 });
 
 test("hero animation respects reduced motion", async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: "reduce" });
   const page = await ctx.newPage();
   await page.goto("/");
-  await expect(page.locator("canvas[data-motion]")).toHaveAttribute("data-motion", "static");
+  await expect(page.locator("main canvas[data-motion]").first()).toHaveAttribute("data-motion", "static");
   await ctx.close();
 });
 
 test("hero animation runs by default", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator("canvas[data-motion]")).toHaveAttribute("data-motion", "animated");
+  await expect(page.locator("main canvas[data-motion]").first()).toHaveAttribute("data-motion", "animated");
 });

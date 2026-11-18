@@ -12,9 +12,13 @@ import { spawn, spawnSync } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 
-const outDir = path.resolve(process.argv[2] ?? "screenshots");
-const routes = process.argv.slice(3).length
-  ? process.argv.slice(3)
+// --tour: scroll through each route with motion on, capturing viewport frames
+// (pinned and scroll-driven sections only make sense this way).
+const tour = process.argv.includes("--tour");
+const args = process.argv.slice(2).filter((a) => a !== "--tour");
+const outDir = path.resolve(args[0] ?? "screenshots");
+const routes = args.slice(1).length
+  ? args.slice(1)
   : ["/", "/solutions/technology", "/solutions/talent", "/solutions/technology-talent", "/industries", "/work", "/company", "/careers", "/trust", "/contact", "/privacy"];
 const port = 3200;
 const base = `http://localhost:${port}`;
@@ -56,6 +60,27 @@ try {
   ];
   for (const size of sizes) {
     const { name, ...opts } = size;
+    if (tour) {
+      const ctx = await browser.newContext(opts);
+      await ctx.addInitScript(() => sessionStorage.setItem("sf-intro", "1"));
+      const page = await ctx.newPage();
+      for (const r of routes) {
+        await page.goto(base + r, { waitUntil: "networkidle" });
+        await page.waitForTimeout(1600);
+        const total = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
+        const step = Math.round(opts.viewport.height * 0.9);
+        let i = 0;
+        for (let y = 0; y <= total + step - 1; y += step, i++) {
+          await page.evaluate((top) => window.scrollTo(0, top), Math.min(y, total));
+          await page.waitForTimeout(650);
+          const file = path.join(outDir, `tour-${name}-${slug(r)}-${String(i).padStart(2, "0")}.png`);
+          await page.screenshot({ path: file });
+        }
+        console.log(`${name} ${r}: ${i} frames`);
+      }
+      await ctx.close();
+      continue;
+    }
     const ctx = await browser.newContext({ ...opts, reducedMotion: "reduce" });
     const page = await ctx.newPage();
     for (const r of routes) {
@@ -70,7 +95,7 @@ try {
     const live = await browser.newContext(opts);
     const hero = await live.newPage();
     await hero.goto(base + "/", { waitUntil: "networkidle" });
-    await hero.waitForTimeout(1500);
+    await hero.waitForTimeout(2400);
     const heroFile = path.join(outDir, `${name}-hero-animated.png`);
     await hero.screenshot({ path: heroFile });
     console.log(heroFile);
