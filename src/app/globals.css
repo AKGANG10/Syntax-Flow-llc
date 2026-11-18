@@ -331,8 +331,9 @@
     animation: word-in 900ms var(--ease-flow) forwards;
     animation-delay: calc(var(--i, 0) * 70ms + var(--d, 0ms));
   }
+  /* Transform only: hero text is visible from the first paint, never waiting on an animation. */
   .fade-up {
-    opacity: 0;
+    transform: translateY(18px);
     animation: fade-up 800ms var(--ease-flow) forwards;
     animation-delay: var(--d, 0ms);
   }
@@ -343,12 +344,7 @@
   }
 }
 @keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
   to {
-    opacity: 1;
     transform: none;
   }
 }
@@ -439,10 +435,22 @@
 .border-flow[data-open="true"]::before {
   opacity: 1;
 }
+/* Animate only while the border is visible: a running conic animation on every
+   card (even at opacity 0) cost seconds of style and paint work on mobile. */
 @media (prefers-reduced-motion: no-preference) {
-  .border-flow::before {
+  .border-flow:hover::before,
+  .border-flow:focus-within::before,
+  .border-flow[data-open="true"]::before {
     animation: flow-angle 5s linear infinite;
   }
+}
+
+/* The footer skips rendering until near the viewport. Only for the last block:
+   Not for sections with focusable content after them: until rendered they use a
+   placeholder height, so a jump to a later element would land off-screen. */
+.defer-render {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }
 @keyframes flow-angle {
   to {
@@ -510,6 +518,75 @@
     transform: rotate(360deg);
   }
 }
+/* Dashboard states: healthy pulses softly, warning draws gentle attention (never flashes). */
+@keyframes status-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  60% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+@keyframes status-warn {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.9);
+    opacity: 0.12;
+  }
+}
+@keyframes feed-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@keyframes dash-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+@keyframes dash-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+.dash-enter > * {
+  animation: dash-in 520ms var(--ease-flow) both;
+}
+.dash-enter > *:nth-child(2) { animation-delay: 60ms; }
+.dash-enter > *:nth-child(3) { animation-delay: 120ms; }
+.dash-enter > *:nth-child(4) { animation-delay: 180ms; }
+.dash-enter > *:nth-child(5) { animation-delay: 240ms; }
+.dash-enter > *:nth-child(6) { animation-delay: 300ms; }
+.dash-enter > *:nth-child(n + 7) { animation-delay: 360ms; }
+
 @keyframes viz-scan {
   from {
     transform: translateY(0);

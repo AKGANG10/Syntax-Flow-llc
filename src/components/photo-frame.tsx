@@ -42,7 +42,7 @@ export function PhotoFrame({
         data-photo-fallback={name}
       >
         <div aria-hidden="true" className={cx("absolute inset-0", tone === "dark" ? "bg-grid-dark" : "bg-grid", "mask-radial")} />
-        <StrandMotif seed={name.length * 7} className="absolute inset-x-0 bottom-0 h-2/3 w-full opacity-50" />
+        <StrandMotif seed={name.length * 7} count={9} className="absolute inset-x-0 bottom-0 h-2/3 w-full opacity-50" />
         <MiniViz kind={fallback} live className="absolute top-1/2 left-1/2 w-[58%] max-w-80 -translate-x-1/2 -translate-y-1/2 drop-shadow-sm" />
       </div>
     );

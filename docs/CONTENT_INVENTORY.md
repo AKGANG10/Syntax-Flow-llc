@@ -57,3 +57,12 @@ Still missing: **social media profile URLs** (the footer omits social links unti
 ## Illustrative content
 
 The "AI platform" example (Home) and "Modernizing an existing platform" example (Technology + Talent) are labelled on the page as illustrative examples, not client case studies.
+
+## Demo data (dashboards)
+
+- Every number on the home dashboard, `/platform` and the solution-page dashboards is fictional sample data from `src/content/demo-data.ts`, labelled "Interactive demo · Sample data" on screen. See ADR-014.
+- Do not replace it with real figures unless Syntax Flow confirms them and has permission to publish them.
+
+## Positioning
+
+- Confirmed by the owner (2026-11-18): Syntax Flow is an IT services and IT consulting company and a US IT recruitment firm. Home, Solutions, metadata and structured data say so plainly.

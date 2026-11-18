@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type FocusEvent } from "react";
 import type { Industry } from "@/content/industries";
 import { useMediaQuery, useScrollProgress } from "@/lib/motion";
 import { IndustryArt } from "./industry-art";
@@ -28,6 +28,19 @@ export function IndustryRail({ items }: { items: Industry[] }) {
     measure();
     return () => ro.disconnect();
   }, [pinned]);
+
+  // Keyboard users: a focused card must come into view via the page scroll that drives
+  // the rail, not via the browser scrolling the clipped container sideways.
+  const onFocusCapture = (e: FocusEvent<HTMLUListElement>) => {
+    if (!pinned || !section.current || !track.current) return;
+    const card = (e.target as HTMLElement).closest("li");
+    const sticky = track.current.parentElement;
+    if (sticky) sticky.scrollLeft = 0;
+    if (!card || travel <= 0) return;
+    const p = Math.min(1, Math.max(0, (card.offsetLeft - track.current.offsetLeft) / travel));
+    const top = section.current.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: top + p * (section.current.offsetHeight - window.innerHeight), behavior: "auto" });
+  };
 
   useScrollProgress(
     section,
@@ -63,6 +76,7 @@ export function IndustryRail({ items }: { items: Industry[] }) {
         </Container>
         <ul
           ref={track}
+          onFocusCapture={onFocusCapture}
           className={cx(
             "mt-10 flex gap-5 px-5 will-change-transform sm:px-8 lg:px-[max(3rem,calc((100vw-78rem)/2+3rem))]",
             !pinned && "snap-x snap-mandatory overflow-x-auto pb-4 [scrollbar-width:thin]",

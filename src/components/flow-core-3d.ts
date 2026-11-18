@@ -6,8 +6,10 @@
  * a navy ring (the "o" of the Flow wordmark), then leave as one rising
  * ribbon (transformation). Cyan pulses travel the strands (data).
  *
- * Loaded only on capable desktops (see hero-scene.tsx). Strand motion runs in
- * the vertex shader; the CPU only moves ~40 pulses and the camera.
+ * Loaded only on capable desktops (see hero-scene.tsx). DOM-free: it runs in a
+ * worker on an OffscreenCanvas (flow-core.worker.ts) or, where that is not
+ * supported, on the main thread (flow-core-host.ts). Strand motion runs in the
+ * vertex shader; the CPU only moves ~40 pulses and the camera.
  */
 
 import {
@@ -108,17 +110,35 @@ function strandCurve(y: number, z: number, spread: number) {
   ]);
 }
 
-export type FlowCoreHandle = { dispose: () => void };
+/** What the page tells the scene: CSS pixel size, pointer (-1..1), hero scroll progress (0..1), and whether to animate. */
+export type FlowCoreInput = { width: number; height: number; pointerX: number; pointerY: number; scroll: number; running: boolean };
 
-export function mountFlowCore(canvas: HTMLCanvasElement): FlowCoreHandle {
+export type FlowCore = { update: (input: Partial<FlowCoreInput>) => void; dispose: () => void };
+
+/** Lets other work run between setup stages, so no single task blocks for long. */
+const breathe = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+
+// Workers have requestAnimationFrame for OffscreenCanvas in current browsers; fall back to a timer.
+const nextFrame = (cb: (now: number) => void): number =>
+  typeof requestAnimationFrame === "function" ? requestAnimationFrame(cb) : (setTimeout(() => cb(performance.now()), 16) as unknown as number);
+const cancelFrame = (id: number) => (typeof cancelAnimationFrame === "function" ? cancelAnimationFrame(id) : clearTimeout(id));
+
+/**
+ * Builds the scene in stages, compiles shaders (in parallel where the driver
+ * allows), draws the first frame and resolves. Rejects if WebGL setup fails.
+ */
+export async function createFlowCore(canvas: HTMLCanvasElement | OffscreenCanvas, pixelRatio: number, initial: FlowCoreInput): Promise<FlowCore> {
+  const input = { ...initial };
   const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
   renderer.setClearColor(0x000000, 0);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.setPixelRatio(pixelRatio);
+  await breathe();
 
   const scene = new Scene();
   const pmrem = new PMREMGenerator(renderer);
   const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environment = envTex;
+  await breathe();
 
   const camera = new PerspectiveCamera(34, 1, 0.1, 100);
   camera.position.set(0, 0.35, 12.5);
@@ -166,6 +186,7 @@ export function mountFlowCore(canvas: HTMLCanvasElement): FlowCoreHandle {
     shaderMats.push(mat);
     world.add(new LineSegments(geo, mat));
   }
+  await breathe();
 
   /* Talent: a few bold strands carrying ring nodes (people). */
   const TALENT = 6;
@@ -215,6 +236,8 @@ export function mountFlowCore(canvas: HTMLCanvasElement): FlowCoreHandle {
       return { node, base: curve.getPointAt(t), seed };
     }),
   );
+
+  await breathe();
 
   /* The core: blue disk in a navy ring inside a glass shell. */
   const core = new Group();
@@ -294,31 +317,25 @@ export function mountFlowCore(canvas: HTMLCanvasElement): FlowCoreHandle {
     scene.add(new Points(geo, mat));
   }
 
-  /* Layout, interaction, loop. */
-  const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
-  const onPointer = (e: PointerEvent) => {
-    pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
-  };
-  window.addEventListener("pointermove", onPointer, { passive: true });
+  await breathe();
 
+  /* Layout and loop. */
+  const pointer = { sx: 0, sy: 0 };
   const resize = () => {
-    const w = canvas.clientWidth || 1;
-    const h = canvas.clientHeight || 1;
+    const w = Math.max(1, input.width);
+    const h = Math.max(1, input.height);
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     // Keep the core to the right of the headline on wide screens.
     world.position.x = w / h > 1.5 ? 2.5 : 1.2;
     camera.updateProjectionMatrix();
   };
-  const ro = new ResizeObserver(resize);
-  ro.observe(canvas);
   resize();
 
   const tmp = new Vector3();
   let raf = 0;
   let running = false;
-  let inView = true;
+  let ready = false;
   let last = 0;
   let time = 0;
 
@@ -342,17 +359,16 @@ export function mountFlowCore(canvas: HTMLCanvasElement): FlowCoreHandle {
     halo.rotation.z = time * 0.12;
     halo2.rotation.z = -time * 0.08;
 
-    pointer.sx += (pointer.x - pointer.sx) * 0.04;
-    pointer.sy += (pointer.y - pointer.sy) * 0.04;
-    const scroll = Math.min(1, window.scrollY / Math.max(1, window.innerHeight));
+    pointer.sx += (input.pointerX - pointer.sx) * 0.04;
+    pointer.sy += (input.pointerY - pointer.sy) * 0.04;
     world.rotation.y = -0.18 + pointer.sx * 0.16;
-    world.rotation.x = 0.06 + pointer.sy * 0.08 + scroll * 0.12;
-    camera.position.z = 12.5 - scroll * 2.2;
+    world.rotation.x = 0.06 + pointer.sy * 0.08 + input.scroll * 0.12;
+    camera.position.z = 12.5 - input.scroll * 2.2;
     renderer.render(scene, camera);
   };
 
   const frame = (now: number) => {
-    raf = requestAnimationFrame(frame);
+    raf = nextFrame(frame);
     const dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016;
     last = now;
     time += dt;
@@ -360,39 +376,42 @@ export function mountFlowCore(canvas: HTMLCanvasElement): FlowCoreHandle {
   };
 
   const sync = () => {
-    const should = inView && !document.hidden;
+    const should = ready && input.running;
     if (should && !running) {
       running = true;
       last = 0;
-      raf = requestAnimationFrame(frame);
+      raf = nextFrame(frame);
     } else if (!should && running) {
       running = false;
-      cancelAnimationFrame(raf);
+      cancelFrame(raf);
     }
   };
-  const io = new IntersectionObserver(([entry]) => {
-    inView = entry.isIntersecting;
-    sync();
-  });
-  io.observe(canvas);
-  document.addEventListener("visibilitychange", sync);
 
+  try {
+    await renderer.compileAsync(scene, camera);
+  } catch {
+    // Compiling during the first render instead is slower but still correct.
+  }
+  ready = true;
   render();
   sync();
-  canvas.dataset.motion = "animated";
-  canvas.dataset.renderer = "webgl";
 
   return {
+    update(patch) {
+      const sized = (patch.width !== undefined && patch.width !== input.width) || (patch.height !== undefined && patch.height !== input.height);
+      Object.assign(input, patch);
+      if (sized) {
+        resize();
+        if (!running) render();
+      }
+      sync();
+    },
     dispose() {
-      cancelAnimationFrame(raf);
+      cancelFrame(raf);
       running = false;
-      io.disconnect();
-      ro.disconnect();
-      document.removeEventListener("visibilitychange", sync);
-      window.removeEventListener("pointermove", onPointer);
       for (const d of disposables) d.dispose();
       renderer.dispose();
-      // The caller discards this canvas, so releasing the context is safe.
+      // The canvas is discarded after this, so releasing the context is safe.
       renderer.forceContextLoss();
     },
   };

@@ -2,22 +2,19 @@
 
 Status as of 2026-11-18: **IMPLEMENTED and TESTED.** Not deployed. Not release ready until the blockers below are closed.
 
-## Evidence (2026-11-18, local production build)
+## Evidence (2026-11-18, local production build, after the dashboard release)
 
 - Lint, type check, production build: pass.
-- Playwright: 66 tests pass on Edge (desktop 1440x900 and Pixel 7), including the real EmailJS adapter against a mock, the unconfigured-production refusal and the www redirect.
+- Playwright: 100 tests pass on Edge (desktop 1440x900 and Pixel 7), including dashboards (tabs by mouse and keyboard, keyboard chart tooltips, live toggle), the real EmailJS adapter against a mock, the unconfigured-production refusal, redirects, and the hero renderer per device.
 - Lighthouse 13.6 (local `next start`, Edge headless):
 
   | Page | Mobile perf | Desktop perf | Accessibility | Best practices | SEO |
   |---|---|---|---|---|---|
-  | Home | 97 | 100 | 100 | 100 | 100 |
-  | Technology + Talent | 99 | 100 | 100 | 100 | 100 |
-  | Contact | 100 | 100 | 100 | 100 | 100 |
-  | Careers | 98 | 100 | 100 | 100 | 100 |
-  | Talent | 99 | 100 | 100 | 100 | 100 |
-  | Trust | 99 | 100 | 100 | 100 | 100 |
+  | Home | 91 to 98 | 96 to 99 | 100 | 100 | 100 |
+  | Platform | 95 | 99 | 100 | 100 | 100 |
+  | Talent | 95 | 100 | 100 | 100 | 100 |
 
-  Mobile LCP about 1.1 s, CLS 0. Local numbers; re-measure on the deployed site.
+  Ranges are across repeated runs. Local numbers; re-measure on the deployed site.
 - `npm audit --omit=dev`: 0 vulnerabilities.
 
 ## Done since the first build

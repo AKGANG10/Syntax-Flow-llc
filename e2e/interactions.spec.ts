@@ -94,11 +94,17 @@ test.describe("experience", () => {
     await expect(page.getByRole("button", { name: /01 Discover/ })).not.toHaveAttribute("aria-current", "step");
   });
 
-  test("all eight industries are reachable from the rail", async ({ page }) => {
+  test("all eight industries are reachable from the rail", async ({ page, isMobile }) => {
     await page.goto("/");
     const rail = page.getByRole("region", { name: "Different sectors. The same two needs." });
     await expect(rail.getByRole("listitem")).toHaveCount(8);
-    await rail.getByRole("link", { name: /Healthcare/ }).click();
+    // On desktop the rail is pinned once hydrated and measured (its height includes the travel).
+    if (!isMobile) await expect(rail).toHaveAttribute("style", /calc\(100dvh \+ [1-9]\d*px\)/);
+    // Keyboard path: focusing a card scrolls the page so the moving rail shows it.
+    const link = rail.getByRole("link", { name: /Healthcare/ });
+    await link.focus();
+    await expect(link).toBeInViewport();
+    await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/\/industries#healthcare$/);
   });
 

@@ -66,6 +66,7 @@ Each entry: context, decision, trade-offs, and the trigger that should reopen it
 **Decision.** A single three.js scene (`flow-core-3d.ts`): technology strands and talent strands with ring nodes converge into a glass core holding the logo's disk-in-ring, then leave as one rising ribbon; cyan pulses travel the strands. Plain three.js, not React Three Fiber or Drei: one scene does not justify the extra dependencies. Strand motion runs in vertex shaders.
 **Gates.** Loaded by dynamic import only when the device has a fine pointer, at least 1024px width, at least 4 cores, WebGL2 and no reduced-motion preference. Everyone else gets the 2D canvas. Render loop pauses off-screen and in background tabs; DPR capped at 1.75; a fresh canvas per mount so React Activity can hide and re-show the page safely.
 **Trade-offs.** 136 KB gzipped (557 KB raw) of JavaScript, measured 2026-11-18, fetched by dynamic import on capable desktops only (not referenced by the initial HTML). Measured with Lighthouse after the change (docs/WORK_QUEUE.md).
+**Update (ADR-015).** The scene now starts when the page is idle and renders in a worker where supported.
 **Revisit when** Lighthouse desktop performance drops below 90 or a lighter technique gives the same story.
 
 ## ADR-011: No GSAP, ScrollTrigger, Lenis or Framer Motion (2026-11-18)
@@ -81,3 +82,21 @@ Each entry: context, decision, trade-offs, and the trigger that should reopen it
 ## ADR-013: Route rename `/solutions/technology-talent` to `/solutions/transformation` (2026-11-18)
 
 **Decision.** Follows the brief's route list. The old URL was live, so it redirects permanently (308) in `next.config.ts`; covered by an E2E test.
+
+## ADR-014: Dashboards are an interactive demo with fictional data (2026-11-18)
+
+**Context.** The owner asked for a dashboard experience (command center, talent, AI, data, transformation) with live-feeling data. Syntax Flow has no client metrics it can publish.
+**Decision.** All numbers come from `src/content/demo-data.ts`, are fictional, and every dashboard carries the visible label "Interactive demo · Sample data". `/platform` says it shows the kind of platform we build, not a product or client systems. Charts are hand-written SVG (no chart library), with text alternatives, keyboard tooltips and status text labels, not colour alone. Live updates pause off-screen, in background tabs and under reduced motion, and render as React transitions so they never block input. On the home page the dashboard mounts only when it approaches the viewport.
+**Revisit when** real, permitted client metrics exist, or a product is actually offered.
+
+## ADR-015: Hero 3D in a worker; main-thread budget rules (2026-11-18)
+
+**Context.** Lighthouse after the dashboard release: mobile home 69, desktop home 83. Profiling (long-animation-frame entries) showed the cost was rendering work and cold three.js compilation (about 420 ms on the main thread), not network.
+**Decision.**
+- The 3D scene starts after load when the browser is idle, and runs on an OffscreenCanvas in a worker (`flow-core.worker.ts`); `flow-core-host.ts` forwards size, pointer, scroll and visibility. Browsers without OffscreenCanvas run the same DOM-free core on the main thread; any failure falls back to the 2D canvas.
+- No `backdrop-filter` on dashboard panels (it repainted every frame).
+- The animated card border runs only while visible (hover, focus, open), not on every card at opacity 0.
+- Hero text animates by transform only, so it is visible and counted from the first paint.
+- `content-visibility: auto` only on the footer. On earlier sections the placeholder height made keyboard focus land off-screen (caught by the industries rail test).
+**Result.** Mobile home 91 to 98, desktop home 96 to 99, accessibility 100.
+

@@ -1,23 +1,37 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { mountFlowCore, type FlowCoreHandle } from "./flow-core-host";
 import { FlowField } from "./flow-field";
 import { cx } from "./ui";
 
 /*
  * Chooses the hero renderer:
  *   - capable desktop (fine pointer, >= 1024px, >= 4 cores, WebGL2, motion OK)
- *     -> 3D flow core, code-split and loaded after first paint;
+ *     -> 3D flow core, started once the page is idle, rendered in a worker
+ *        (OffscreenCanvas) where supported;
  *   - everything else, or if the 3D module fails -> 2D canvas strands.
  */
 
 const QUERY = "(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
 
 let webgl2: boolean | undefined;
+/**
+ * True only for hardware-accelerated WebGL2. Software renderers (SwiftShader,
+ * llvmpipe, Microsoft Basic Render) run the scene on the CPU: slow and hot,
+ * so those visitors get the 2D canvas instead.
+ */
 function hasWebGL2() {
   if (webgl2 === undefined) {
     try {
-      webgl2 = !!document.createElement("canvas").getContext("webgl2");
+      const gl = document.createElement("canvas").getContext("webgl2");
+      if (!gl) webgl2 = false;
+      else {
+        const info = gl.getExtension("WEBGL_debug_renderer_info");
+        const renderer = String(info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER));
+        webgl2 = !/swiftshader|llvmpipe|software|basic render/i.test(renderer);
+        gl.getExtension("WEBGL_lose_context")?.loseContext();
+      }
     } catch {
       webgl2 = false;
     }
@@ -48,19 +62,39 @@ export function HeroScene({ className, fallbackClassName }: { className?: string
     canvas.dataset.motion = "pending";
     canvas.className = "absolute inset-0 h-full w-full opacity-0 transition-opacity duration-[900ms]";
     box.current.appendChild(canvas);
-    let handle: { dispose: () => void } | undefined;
+    let handle: FlowCoreHandle | undefined;
     let cancelled = false;
-    import("./flow-core-3d")
-      .then(({ mountFlowCore }) => {
-        if (cancelled) return;
-        handle = mountFlowCore(canvas);
-        requestAnimationFrame(() => canvas.classList.replace("opacity-0", "opacity-100"));
-      })
-      .catch(() => {
-        if (!cancelled) setFailed(true);
+    let idle = 0;
+    let timer = 0;
+    const start = () => {
+      if (cancelled) return;
+      handle = mountFlowCore(canvas, {
+        onReady: (thread) => {
+          if (cancelled) return;
+          canvas.dataset.motion = "animated";
+          canvas.dataset.renderer = "webgl";
+          canvas.dataset.thread = thread;
+          canvas.classList.replace("opacity-0", "opacity-100");
+        },
+        onError: () => {
+          if (!cancelled) setFailed(true);
+        },
       });
+    };
+    // The scene is decoration: start it once the page has loaded and the main
+    // thread is idle, so it never competes with first paint or hydration.
+    const schedule = () => {
+      // Safari has no requestIdleCallback.
+      if (typeof window.requestIdleCallback === "function") idle = window.requestIdleCallback(start, { timeout: 2500 });
+      else timer = window.setTimeout(start, 400);
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
     return () => {
       cancelled = true;
+      window.removeEventListener("load", schedule);
+      if (idle) window.cancelIdleCallback(idle);
+      window.clearTimeout(timer);
       handle?.dispose();
       canvas.remove();
     };
