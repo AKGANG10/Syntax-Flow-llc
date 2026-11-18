@@ -23,10 +23,10 @@ Status as of 2026-11-18: **IMPLEMENTED and TESTED.** Not deployed. Not release r
 ## Done since the first build
 
 - Canonical domain confirmed (apex); `www` permanent redirect added and tested.
-- EmailJS template ID `template_v26pcko` recorded; template variable aliases added; adapter tested against a mock.
+- EmailJS template ID `template_6m1tuud` recorded; template variable aliases added; adapter tested against a mock.
 - DNS inspected read-only and a safe go-live change set written (docs/DOMAIN_DNS.md). Google Workspace mail records identified and protected.
 - Hosting compared; company deployed to Vercel. Live smoke test passed; production correctly refuses inquiries (503) until EmailJS keys are set.
-- EmailJS Service ID `service_d6czg85` recorded.
+- EmailJS Service ID `service_53cnnxd` recorded.
 - Server messages for missing fields made plain-language (found on the live deployment).
 - E-Verify poster rule corrected: posters must be hosted on the site, not linked.
 - Lighthouse findings fixed: lifecycle list semantics; scroll reveal no longer fades text.
@@ -35,9 +35,9 @@ Status as of 2026-11-18: **IMPLEMENTED and TESTED.** Not deployed. Not release r
 
 | # | Item | Needs | Acceptance |
 |---|---|---|---|
-| 1 | EmailJS Public Key and Private Key (Service ID `service_d6czg85` and Template ID received) | Company | Entered in Vercel environment variables; docs/EMAIL_SETUP.md section 5 all checked |
-| 2 | Vercel: deployed at https://syntax-flow-llc.vercel.app, auto-deploys from `main` (smoke test passed 2026-11-18). Remaining: Pro plan decision, environment variables | Company, or CLI login on this machine | docs/DEPLOY.md checklist complete |
-| 3 | DNS change at GoDaddy (apex A and www CNAME only) | Company login, or company applies it | docs/DOMAIN_DNS.md verification list checked |
+| 1 | EmailJS Public Key and Private Key. Service ID `service_53cnnxd` and Template ID `template_6m1tuud` are set in Vercel | Company | Both keys in Vercel; docs/EMAIL_SETUP.md section 5 all checked |
+| 2 | Vercel: deployed, auto-deploys from `main`. Set 2026-11-18: `NEXT_PUBLIC_SITE_URL`, `INQUIRY_DELIVERY`, `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`; apex and www domains added. Remaining: Pro plan decision | Company | Project on a plan that permits commercial use |
+| 3 | GoDaddy: two A records and one CNAME (exact values in docs/DOMAIN_DNS.md) | Company login | `vercel domains verify` reports valid; docs/DOMAIN_DNS.md verification list checked |
 | 4 | Legal review of Privacy and Terms; retention policy | Counsel | Draft banners removed (`draft={false}`) |
 | 5 | Confirm statements in docs/CONTENT_INVENTORY.md | Company | Each confirmed or edited |
 | 6 | E-Verify and Right to Work posters (English, Spanish) from the E-Verify account | Company | PDFs hosted and linked on Careers; placeholder removed |

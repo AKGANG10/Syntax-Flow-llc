@@ -14,8 +14,8 @@ Vercel's Hobby (free) plan is limited to personal, non-commercial use ([terms](h
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | `https://syntaxflowllc.com` | Production |
 | `INQUIRY_DELIVERY` | `emailjs` | Production, Preview |
-| `EMAILJS_SERVICE_ID` | `service_d6czg85` | Production, Preview |
-| `EMAILJS_TEMPLATE_ID` | `template_v26pcko` | Production, Preview |
+| `EMAILJS_SERVICE_ID` | `service_53cnnxd` | Production, Preview |
+| `EMAILJS_TEMPLATE_ID` | `template_6m1tuud` | Production, Preview |
 | `EMAILJS_PUBLIC_KEY` | from EmailJS, Account, General | Production, Preview |
 | `EMAILJS_PRIVATE_KEY` | from EmailJS, Account, Security (mark **Sensitive**) | Production, Preview |
 

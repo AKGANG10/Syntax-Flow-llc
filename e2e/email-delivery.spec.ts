@@ -55,7 +55,7 @@ test("delivers through EmailJS with the expected payload", async () => {
   expect(sent!.contentType).toContain("application/json");
   expect(sent!.body).toMatchObject({
     service_id: "service_e2e",
-    template_id: "template_v26pcko",
+    template_id: "template_6m1tuud",
     user_id: "public_e2e",
     accessToken: "private_e2e",
   });

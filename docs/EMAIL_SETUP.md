@@ -7,14 +7,14 @@ The website's forms post to `POST /api/inquiry`. After validation, the server se
 ## 1. EmailJS account
 
 1. Create or use the company EmailJS account (record the account owner; enable MFA).
-2. **Email Services:** add a **Gmail** service and sign in with the company's **Google Workspace** account (for example hr@syntaxflowllc.com). **Service ID supplied by Syntax Flow: `service_d6czg85`.** Confirm in the EmailJS dashboard that this service is the Gmail/Workspace one.
+2. **Email Services:** add a **Gmail** service and sign in with the company's **Google Workspace** account (for example hr@syntaxflowllc.com). **Service ID supplied by Syntax Flow: `service_53cnnxd`.** Confirm in the EmailJS dashboard that this service is the Gmail/Workspace one.
    This is required, not a preference: the domain's DMARC policy is `p=quarantine` and its SPF and DKIM authorize only Google (docs/DOMAIN_DNS.md). Mail sent through any other EmailJS service as @syntaxflowllc.com would fail alignment and go to spam.
 3. **Account, Security:** enable API access for non-browser applications (server-side calls), and enable the private key requirement. Note the **Public Key** and **Private Key**.
 4. **Account, Security:** restrict allowed origins to the production domain if your plan offers it.
 
 ## 2. Template
 
-**Template ID supplied by Syntax Flow: `template_v26pcko`** (recorded in `.env.example`; template IDs are not secret).
+**Template ID supplied by Syntax Flow: `template_6m1tuud`** (recorded in `.env.example`; template IDs are not secret).
 
 The server sends two sets of variable names, so the template works whether it uses the style below or EmailJS's stock "Contact Us" variables (`{{name}}`, `{{email}}`, `{{title}}`, `{{message}}`, `{{time}}`). Recommended template settings:
 

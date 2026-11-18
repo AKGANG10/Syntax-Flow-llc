@@ -25,15 +25,23 @@ Mail for the company runs on Google Workspace. DMARC is at `p=quarantine`, so ma
 
 The website's form emails pass DMARC only if EmailJS sends through the Google Workspace account (see docs/EMAIL_SETUP.md).
 
-## Go-live change set (after the host shows its required values)
+## Go-live change set for Vercel
 
-Take the exact values from the hosting provider's domain screen at that time; do not use values from memory.
+Both `syntaxflowllc.com` and `www.syntaxflowllc.com` were added to the Vercel project `syntax-flow-llc` on 2026-11-18. Vercel's recommended records (from `vercel domains verify`, 2026-11-18):
 
-1. In GoDaddy, turn off domain **Forwarding** and **Parking** for syntaxflowllc.com if they are enabled.
-2. Apex: replace the two parked A records with the host's apex A record(s) (or ALIAS/ANAME if the host requires it and GoDaddy supports it).
-3. `www`: change the CNAME target to the host's `www` target.
-4. Leave every MX and TXT record exactly as in the snapshot above.
-5. In the host, add both `syntaxflowllc.com` (primary) and `www.syntaxflowllc.com`, and let it issue the HTTPS certificate.
+| Type | Name | Current value (remove) | New value | TTL |
+|---|---|---|---|---|
+| A | `@` | 15.197.148.33 | **216.198.79.1** | default (1 hour) |
+| A | `@` | 3.33.130.190 | **64.29.17.1** | default |
+| CNAME | `www` | syntaxflowllc.com | **2248303600f2e8ab.vercel-dns-017.com** | default |
+
+In GoDaddy (My Products, syntaxflowllc.com, DNS):
+
+1. If **Forwarding** is set for the domain, delete it (Forwarding section). GoDaddy's parked page uses the two A records being replaced.
+2. Edit the two `@` A records to the new values above (edit in place rather than delete-then-add, so the apex is never without an address).
+3. Edit the `www` CNAME to the new value.
+4. Change nothing else. Do **not** use Vercel's "nameservers" option (`ns1/ns2.vercel-dns.com`): moving nameservers would drop the Google Workspace MX, SPF, DKIM and DMARC records unless every one were recreated at Vercel first.
+5. Tell the developer, who runs `vercel domains verify syntaxflowllc.com` until Vercel reports the domain valid and issues certificates.
 
 Rollback: restore the two A records (15.197.148.33, 3.33.130.190) and the `www` CNAME to `syntaxflowllc.com`.
 

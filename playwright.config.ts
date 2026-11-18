@@ -60,7 +60,7 @@ export default defineConfig({
         INQUIRY_DELIVERY: "emailjs",
         EMAILJS_API_URL: `http://localhost:${MOCK_EMAILJS_PORT}/api/v1.0/email/send`,
         EMAILJS_SERVICE_ID: "service_e2e",
-        EMAILJS_TEMPLATE_ID: "template_v26pcko",
+        EMAILJS_TEMPLATE_ID: "template_6m1tuud",
         EMAILJS_PUBLIC_KEY: "public_e2e",
         EMAILJS_PRIVATE_KEY: "private_e2e",
         INQUIRY_RATE_LIMIT_MAX: "50",
