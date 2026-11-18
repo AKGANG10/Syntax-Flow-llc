@@ -2,26 +2,26 @@
 
 Every external asset used on the site, with its license as checked on the date shown. If a license cannot be confirmed, the asset is not used.
 
-## Photography (Unsplash)
+## Photography (Pexels)
 
-License: [Unsplash License](https://unsplash.com/license), checked 2026-11-18. Commercial and non-commercial use allowed; no permission or attribution required (credit given here anyway). Not permitted: selling the images without significant modification, or compiling them into a competing image service. Neither applies.
+License: [Pexels License](https://www.pexels.com/license/), checked 2026-11-18. Free for commercial and non-commercial use, modification allowed, attribution not required (credited here anyway). Not allowed: selling unaltered copies, implying that people shown endorse Syntax Flow, or using images in a misleading or offensive way.
 
-Each photo page below showed "Free to use under the Unsplash License" on 2026-11-18. Photos marked **Unsplash+** (paid) were rejected; one candidate (Alex Shuper, server room) was rejected for that reason.
+Each photo page below showed "Free" (no paid marker) on 2026-11-18. Files were downloaded from the Pexels image CDN on 2026-11-18 into `syntax Flow/photos` and imported with `npm run media:import` (resized to 2400px, metadata stripped). Manifest: `src/content/media.ts`.
 
-| Key | Photo | Photographer | Unsplash ID | Commercial use | Used on |
+| Key | Photo | Photographer | Pexels ID | Commercial use | Used on |
 |---|---|---|---|---|---|
-| discover | [Wall of sticky notes](https://unsplash.com/photos/a-wall-with-a-bunch-of-sticky-notes-on-it-fQOyF0D0cDU) | Jakub Żerdzicki | fQOyF0D0cDU | Yes | Home: The Flow, step 1 |
-| design | [Designing wireframes at a desk](https://unsplash.com/photos/man-designing-wireframes-at-desk-with-laptop-pqzRfBhd9r0) | UX Indonesia | pqzRfBhd9r0 | Yes | Home: The Flow, step 2 |
-| build | [Programmer at several monitors](https://unsplash.com/photos/programmer-coding-at-a-desk-with-several-monitors-bWVBCDtTRJI) | Jakub Żerdzicki | bWVBCDtTRJI | Yes | Home: The Flow, step 3; Technology |
-| connect | [Team around a computer](https://unsplash.com/photos/team-collaborating-around-a-computer-in-an-office-UikYLDQj9_I) | Vitaly Gariev | UikYLDQj9_I | Yes | Home: The Flow, step 4; People and practice |
-| scale | [Server racks in a data center](https://unsplash.com/photos/server-racks-in-data-center-klWUhr-wPJ8) | imgix | klWUhr-wPJ8 | Yes | Home: The Flow, step 5 |
-| transform | [Glass skyscrapers](https://unsplash.com/photos/modern-glass-skyscrapers-reflecting-the-sky-ybJO3h3YsiE) | Sebastian Schuster | ybJO3h3YsiE | Yes | Home: The Flow, step 6; Transformation |
-| typing | [Hands typing, code on screens](https://unsplash.com/photos/hands-typing-on-a-keyboard-with-computer-screens-8ljjFxQFwKM) | Jakub Żerdzicki | 8ljjFxQFwKM | Yes | Home: People and practice |
-| office | [Open-plan office](https://unsplash.com/photos/an-office-with-a-lot-of-desks-and-chairs-pYlBAu3de0w) | Bernd Dittrich | pYlBAu3de0w | Yes | Company; Careers |
-| colleagues | [Two colleagues at a laptop](https://unsplash.com/photos/two-colleagues-collaborating-on-a-project-at-a-laptop-tRvuRPE8cr4) | Vitaly Gariev | tRvuRPE8cr4 | Yes | Company; Talent |
-| technician | [Technician at server equipment](https://unsplash.com/photos/technician-working-on-server-equipment-with-tools-ufT32_VFS-I) | Valentin Lacoste | ufT32_VFS-I | Yes | Home: People and practice |
+| discover | [Sticky notes on a whiteboard](https://www.pexels.com/photo/creative-brainstorming-session-with-sticky-notes-29521529/) | Jakub Zerdzicki | 29521529 | Yes | Home: The Flow |
+| design | [Wireframes in a notebook](https://www.pexels.com/photo/notebook-beside-the-iphone-on-table-196644/) | picjumbo.com | 196644 | Yes | Home: The Flow |
+| build | [Developer at two monitors](https://www.pexels.com/photo/man-coding-on-computers-sitting-at-desk-16129703/) | Lisa Fotios | 16129703 | Yes | Home: The Flow; Technology |
+| connect | [Team around a laptop](https://www.pexels.com/photo/a-team-looking-at-a-laptop-and-collaborating-7643742/) | MART PRODUCTION | 7643742 | Yes | Home: The Flow, People and practice |
+| scale | [Server racks in a data center](https://www.pexels.com/photo/server-racks-on-data-center-5480781/) | Brett Sayles | 5480781 | Yes | Home: The Flow |
+| transform | [Glass skyscrapers from below](https://www.pexels.com/photo/skyscrapers-with-reflecting-walls-in-modern-megapolis-7078666/) | Laura Tancredi | 7078666 | Yes | Home: The Flow; Transformation |
+| typing | [Hands typing code on a laptop](https://www.pexels.com/photo/hands-typing-on-a-laptop-computer-5385526/) | TREEDEO.ST | 5385526 | Yes | Home: People and practice |
+| office | [Open-plan office](https://www.pexels.com/photo/photo-of-building-interior-3778622/) | Polina Zimmerman | 3778622 | Yes | Company; Careers |
+| colleagues | [Two colleagues at a laptop](https://www.pexels.com/photo/a-man-and-woman-working-together-6893945/) | Mikhail Nilov | 6893945 | Yes | Company; Talent |
+| technician | [Engineer cabling a server rack](https://www.pexels.com/photo/electronics-engineer-fixing-cables-on-server-442150/) | Field Engineer | 442150 | Yes | Home: People and practice |
 
-**Status:** verified, not yet imported. Unsplash blocks automated downloads, so the files must be downloaded by a person ("Download free" on each page) and imported with `npm run media:import -- "<folder>"`. Until then, each slot renders original procedural art (no broken images).
+**History:** an earlier set of ten Unsplash photos was verified but never imported, because Unsplash blocks automated downloads. It was replaced by this set; no Unsplash file was ever published.
 
 **Usage rule:** stock photos are illustrative. Never caption them as Syntax Flow staff, offices or clients, and never use them as evidence of real events. Several show identifiable people; the Unsplash License does not grant rights for uses that imply those people endorse Syntax Flow.
 

@@ -1,9 +1,9 @@
-// Imports downloaded Unsplash originals into optimised site images.
+// Imports downloaded photo originals into optimised site images.
 //
 // Usage: npm run media:import -- "<folder with downloads>"
 //
-// Each download is matched to src/content/media.ts by the Unsplash photo ID in
-// its file name (Unsplash names downloads like "name-<ID>-unsplash.jpg").
+// Each download is matched to src/content/media.ts by the photo ID (sourceId)
+// in its file name (Pexels names downloads like "pexels-<name>-<ID>.jpg").
 // Output: public/images/<key>.jpg (max 2400px wide, metadata stripped) and
 // src/content/media-blur.json (tiny blurred placeholders).
 
@@ -19,7 +19,7 @@ if (!inbox) {
 }
 
 const manifest = await readFile(path.join(root, "src/content/media.ts"), "utf8");
-const entries = [...manifest.matchAll(/(\w+): \{\s*key: "(\w+)",\s*unsplashId: "([\w-]+)"/g)].map((m) => ({ key: m[2], id: m[3] }));
+const entries = [...manifest.matchAll(/(\w+): \{\s*key: "(\w+)",\s*source: "\w+",\s*sourceId: "([\w-]+)"/g)].map((m) => ({ key: m[2], id: m[3] }));
 const files = (await readdir(inbox)).filter((f) => /\.(jpe?g|png|webp)$/i.test(f));
 const outDir = path.join(root, "public/images");
 await mkdir(outDir, { recursive: true });

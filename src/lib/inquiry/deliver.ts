@@ -119,7 +119,18 @@ export function deliveryConfigured() {
 
 export async function deliver(inq: Inquiry, reference: string): Promise<DeliveryResult> {
   const m = mode();
-  const submittedAt = new Date().toISOString();
+  const now = new Date();
+  // Dallas time for the people reading the email, plus UTC for an unambiguous record.
+  const dallas = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  }).format(now);
+  const submittedAt = `${dallas} (${now.toISOString().slice(0, 16).replace("T", " ")} UTC)`;
 
   if (m === "log") {
     // Redacted on purpose: no names, emails or message content in logs.

@@ -1,14 +1,15 @@
 /**
- * Photography manifest. Every entry was checked on its Unsplash page on
- * 2026-11-18 and shows "Free to use under the Unsplash License" (not
- * Unsplash+). Details and terms: docs/ASSET_LICENSES.md.
+ * Photography manifest. Every entry was checked on its Pexels page on
+ * 2026-11-18: listed as "Free" under the Pexels License (free for commercial
+ * use, no attribution required). Details and terms: docs/ASSET_LICENSES.md.
  *
  * Files are produced by `npm run media:import -- <folder>` from the original
- * downloads. Until a file exists, <PhotoFrame> renders an original procedural
- * graphic instead, so the site never ships a broken image.
+ * downloads (file names contain the Pexels photo ID). Until a file exists,
+ * <PhotoFrame> renders an original procedural graphic instead, so the site
+ * never ships a broken image.
  *
  * Stock imagery is illustrative: never caption it as Syntax Flow staff,
- * offices or clients.
+ * offices or clients, or imply that the people shown endorse Syntax Flow.
  */
 
 export type MediaKey =
@@ -25,7 +26,8 @@ export type MediaKey =
 
 export type Media = {
   key: MediaKey;
-  unsplashId: string;
+  source: "pexels";
+  sourceId: string;
   alt: string;
   photographer: string;
   page: string;
@@ -34,73 +36,83 @@ export type Media = {
 export const media: Record<MediaKey, Media> = {
   discover: {
     key: "discover",
-    unsplashId: "fQOyF0D0cDU",
-    alt: "A wall covered in planning sticky notes",
-    photographer: "Jakub Żerdzicki",
-    page: "https://unsplash.com/photos/a-wall-with-a-bunch-of-sticky-notes-on-it-fQOyF0D0cDU",
+    source: "pexels",
+    sourceId: "29521529",
+    alt: "Sticky notes arranged on a whiteboard during a planning session",
+    photographer: "Jakub Zerdzicki",
+    page: "https://www.pexels.com/photo/creative-brainstorming-session-with-sticky-notes-29521529/",
   },
   design: {
     key: "design",
-    unsplashId: "pqzRfBhd9r0",
-    alt: "A designer sketching interface wireframes at a desk beside a laptop",
-    photographer: "UX Indonesia",
-    page: "https://unsplash.com/photos/man-designing-wireframes-at-desk-with-laptop-pqzRfBhd9r0",
+    source: "pexels",
+    sourceId: "196644",
+    alt: "Interface wireframes sketched in a notebook beside a smartphone",
+    photographer: "picjumbo.com",
+    page: "https://www.pexels.com/photo/notebook-beside-the-iphone-on-table-196644/",
   },
   build: {
     key: "build",
-    unsplashId: "bWVBCDtTRJI",
-    alt: "A developer's desk at night with several monitors showing code",
-    photographer: "Jakub Żerdzicki",
-    page: "https://unsplash.com/photos/programmer-coding-at-a-desk-with-several-monitors-bWVBCDtTRJI",
+    source: "pexels",
+    sourceId: "16129703",
+    alt: "A developer writing code across two monitors",
+    photographer: "Lisa Fotios",
+    page: "https://www.pexels.com/photo/man-coding-on-computers-sitting-at-desk-16129703/",
   },
   connect: {
     key: "connect",
-    unsplashId: "UikYLDQj9_I",
-    alt: "Colleagues gathered around a computer in an open office, discussing the screen",
-    photographer: "Vitaly Gariev",
-    page: "https://unsplash.com/photos/team-collaborating-around-a-computer-in-an-office-UikYLDQj9_I",
+    source: "pexels",
+    sourceId: "7643742",
+    alt: "A team gathered around a laptop, working through a problem together",
+    photographer: "MART PRODUCTION",
+    page: "https://www.pexels.com/photo/a-team-looking-at-a-laptop-and-collaborating-7643742/",
   },
   scale: {
     key: "scale",
-    unsplashId: "klWUhr-wPJ8",
-    alt: "Rows of server racks in a data center",
-    photographer: "imgix",
-    page: "https://unsplash.com/photos/server-racks-in-data-center-klWUhr-wPJ8",
+    source: "pexels",
+    sourceId: "5480781",
+    alt: "Rows of server racks with network cabling in a data center",
+    photographer: "Brett Sayles",
+    page: "https://www.pexels.com/photo/server-racks-on-data-center-5480781/",
   },
   transform: {
     key: "transform",
-    unsplashId: "ybJO3h3YsiE",
-    alt: "Modern glass skyscrapers reflecting each other against the sky",
-    photographer: "Sebastian Schuster",
-    page: "https://unsplash.com/photos/modern-glass-skyscrapers-reflecting-the-sky-ybJO3h3YsiE",
+    source: "pexels",
+    sourceId: "7078666",
+    alt: "Glass skyscrapers seen from below against a blue sky",
+    photographer: "Laura Tancredi",
+    page: "https://www.pexels.com/photo/skyscrapers-with-reflecting-walls-in-modern-megapolis-7078666/",
   },
   typing: {
     key: "typing",
-    unsplashId: "8ljjFxQFwKM",
-    alt: "Close-up of hands typing on a keyboard with source code on the screens behind",
-    photographer: "Jakub Żerdzicki",
-    page: "https://unsplash.com/photos/hands-typing-on-a-keyboard-with-computer-screens-8ljjFxQFwKM",
+    source: "pexels",
+    sourceId: "5385526",
+    alt: "Hands typing code on a laptop keyboard",
+    photographer: "TREEDEO.ST",
+    page: "https://www.pexels.com/photo/hands-typing-on-a-laptop-computer-5385526/",
   },
   office: {
     key: "office",
-    unsplashId: "pYlBAu3de0w",
-    alt: "A bright open-plan office with rows of desks and large windows",
-    photographer: "Bernd Dittrich",
-    page: "https://unsplash.com/photos/an-office-with-a-lot-of-desks-and-chairs-pYlBAu3de0w",
+    source: "pexels",
+    sourceId: "3778622",
+    alt: "A bright open-plan office with rows of desks",
+    photographer: "Polina Zimmerman",
+    page: "https://www.pexels.com/photo/photo-of-building-interior-3778622/",
   },
   colleagues: {
     key: "colleagues",
-    unsplashId: "tRvuRPE8cr4",
-    alt: "Two colleagues reviewing a project together on a laptop",
-    photographer: "Vitaly Gariev",
-    page: "https://unsplash.com/photos/two-colleagues-collaborating-on-a-project-at-a-laptop-tRvuRPE8cr4",
+    source: "pexels",
+    sourceId: "6893945",
+    alt: "Two colleagues reviewing work together on a laptop",
+    photographer: "Mikhail Nilov",
+    page: "https://www.pexels.com/photo/a-man-and-woman-working-together-6893945/",
   },
   technician: {
     key: "technician",
-    unsplashId: "ufT32_VFS-I",
-    alt: "A technician working on server equipment with tools",
-    photographer: "Valentin Lacoste",
-    page: "https://unsplash.com/photos/technician-working-on-server-equipment-with-tools-ufT32_VFS-I",
+    source: "pexels",
+    sourceId: "442150",
+    alt: "An engineer connecting network cables in a server rack",
+    photographer: "Field Engineer",
+    page: "https://www.pexels.com/photo/electronics-engineer-fixing-cables-on-server-442150/",
   },
 };
 

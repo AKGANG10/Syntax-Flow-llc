@@ -75,9 +75,10 @@ Each entry: context, decision, trade-offs, and the trigger that should reopen it
 **Decision.** Pinned sections (The Flow, industries rail) use CSS `position: sticky` plus a 60-line `useScrollProgress` hook; reveals, text scrub, photo reveal, parallax and progress use CSS scroll-driven animations as progressive enhancement; micro-interactions (`useMagnetic`, `useTiltCard`, cursor companion) are small hooks. Native scrolling is kept: no smooth-scroll library, because it hijacks scrolling, which the owner's constitution prohibits without strong justification.
 **Revisit when** a sequence needs timeline choreography that these primitives cannot express cleanly.
 
-## ADR-012: Photography from verified Unsplash photos, with procedural fallbacks (2026-11-18)
+## ADR-012: Photography from verified Pexels photos, with procedural fallbacks (2026-11-18)
 
-**Decision.** Ten photos, each verified as free under the Unsplash License (not Unsplash+), recorded in docs/ASSET_LICENSES.md. Unsplash blocks automated downloads, so files are downloaded by a person and imported with `npm run media:import`. `<PhotoFrame>` renders original procedural art until a file exists, so the site never ships a broken or unlicensed image. Industries use original artwork instead of photos.
+**Decision.** Ten photos, each verified as free under the Pexels License, recorded in docs/ASSET_LICENSES.md and imported with `npm run media:import`. `<PhotoFrame>` renders original procedural art if a file is missing, so the site never ships a broken or unlicensed image. Industries use original artwork instead of photos.
+**History.** The first choice was Unsplash, but Unsplash blocks automated downloads; the owner asked us to source images ourselves, and Pexels allows direct download. Generated images were not used: they cannot truthfully show real working environments.
 
 ## ADR-013: Route rename `/solutions/technology-talent` to `/solutions/transformation` (2026-11-18)
 
