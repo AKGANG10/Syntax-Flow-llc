@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PhotoFrame } from "@/components/photo-frame";
 import { ServicePillars } from "@/components/service-pillars";
 import { SolutionsGrid } from "@/components/solutions-grid";
 import { ButtonLink, Container, CtaBand, PageHero, Section, SectionHeading, cx } from "@/components/ui";
@@ -26,7 +27,10 @@ export default function SolutionsPage() {
         </ButtonLink>
       </PageHero>
 
-      <ServicePillars id="solutions-what" />
+      <ServicePillars
+        id="solutions-what"
+        image={<PhotoFrame name="genCapabilities" fallback="transformation" className="aspect-[21/9] w-full max-sm:aspect-[16/9]" sizes="(min-width: 1280px) 1200px, 100vw" parallax={false} />}
+      />
 
       <Section id="all" aria-labelledby="solutions-all" className="noise">
         <div aria-hidden="true" className="bg-grid mask-fade-y pointer-events-none absolute inset-0 opacity-60" />

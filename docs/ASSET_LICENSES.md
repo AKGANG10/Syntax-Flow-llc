@@ -23,6 +23,20 @@ Each photo page below showed "Free" (no paid marker) on 2026-11-18. Files were d
 
 **History:** an earlier set of ten Unsplash photos was verified but never imported, because Unsplash blocks automated downloads. It was replaced by this set; no Unsplash file was ever published.
 
+## Generated illustrations (supplied by Syntax Flow)
+
+Supplied by the owner on 2026-11-18, created with an AI image tool (ChatGPT). Under that tool's terms the output belongs to the person who generated it; Syntax Flow authorised their use on the site. Each one shows a visible "Illustration" tag (`PhotoFrame`, `source: "generated"`) and its alt text starts with "Illustration:".
+
+| Key | Content | Used on |
+|---|---|---|
+| genBanner | Mascot with six service panels | Home: What we do |
+| genCapabilities | Hanging service panels | Solutions |
+| genCloud | Engineers planning a cloud architecture | Technology |
+| genTeam | Team with a Discover to Scale delivery flow | Talent |
+| genDevelopers | Developers reviewing code and dashboards | Careers |
+
+**Not used, and why:** images showing invented results ("+42% operational efficiency", "128K+ talent network", "1,248 active candidates, 86% placement rate") would read as real Syntax Flow figures; branded office and lobby scenes would read as photos of the real office; the rest were near-duplicates.
+
 **Usage rule:** stock photos are illustrative. Never caption them as Syntax Flow staff, offices or clients, and never use them as evidence of real events. Several show identifiable people; the Unsplash License does not grant rights for uses that imply those people endorse Syntax Flow.
 
 ## Typefaces

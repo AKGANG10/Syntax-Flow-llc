@@ -75,7 +75,7 @@ export default function TechnologyPage() {
 
       <Section tone="white" aria-label="Engineering in practice" className="pt-0 sm:pt-0 lg:pt-0">
         <Container>
-          <PhotoFrame name="build" fallback="software" className="aspect-[21/9] w-full max-sm:aspect-[4/3]" sizes="(min-width: 1280px) 1200px, 100vw" />
+          <PhotoFrame name="genCloud" fallback="software" className="aspect-[21/9] w-full max-sm:aspect-[4/3]" sizes="(min-width: 1280px) 1200px, 100vw" />
         </Container>
       </Section>
 

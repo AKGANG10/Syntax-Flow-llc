@@ -100,7 +100,7 @@ export default function TalentPage() {
 
       <Section tone="white" aria-label="Recruiting in practice" className="pb-0 sm:pb-0 lg:pb-0">
         <Container>
-          <PhotoFrame name="colleagues" fallback="talent" className="aspect-[21/9] w-full max-sm:aspect-[4/3]" sizes="(min-width: 1280px) 1200px, 100vw" />
+          <PhotoFrame name="genTeam" fallback="talent" className="aspect-[21/9] w-full max-sm:aspect-[4/3]" sizes="(min-width: 1280px) 1200px, 100vw" />
         </Container>
       </Section>
 

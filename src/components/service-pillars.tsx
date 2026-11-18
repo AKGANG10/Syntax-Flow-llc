@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { PillarNode } from "./journey";
 import { ArrowIcon, Container, Eyebrow, cx } from "./ui";
 
@@ -35,7 +36,18 @@ const pillars = [
   },
 ];
 
-export function ServicePillars({ id, tone = "white", headingLevel = "h2" }: { id: string; tone?: "white" | "paper"; headingLevel?: "h2" | "h3" }) {
+export function ServicePillars({
+  id,
+  tone = "white",
+  headingLevel = "h2",
+  image,
+}: {
+  id: string;
+  tone?: "white" | "paper";
+  headingLevel?: "h2" | "h3";
+  /** Optional wide visual between the heading and the pillars. */
+  image?: ReactNode;
+}) {
   const H = headingLevel;
   return (
     <section aria-labelledby={id} className={cx("relative py-20 sm:py-24", tone === "white" ? "bg-white" : "bg-paper")}>
@@ -47,7 +59,8 @@ export function ServicePillars({ id, tone = "white", headingLevel = "h2" }: { id
           </H>
           <p className="t-lead mt-5 text-ink-600">One partner for the systems you need and the technical people who build and run them, headquartered in Dallas, Texas.</p>
         </div>
-        <ul className="mt-14 grid gap-5 lg:grid-cols-3">
+        {image ? <div className="mt-12">{image}</div> : null}
+        <ul className={cx("grid gap-5 lg:grid-cols-3", image ? "mt-8" : "mt-14")}>
           {pillars.map((p) => (
             <li key={p.name}>
               <Link

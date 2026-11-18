@@ -22,11 +22,17 @@ export type MediaKey =
   | "typing"
   | "office"
   | "colleagues"
-  | "technician";
+  | "technician"
+  | "genDevelopers"
+  | "genCloud"
+  | "genTeam"
+  | "genCapabilities"
+  | "genBanner";
 
 export type Media = {
   key: MediaKey;
-  source: "pexels";
+  /** "generated": AI illustrations supplied by Syntax Flow; shown with an "Illustration" tag. */
+  source: "pexels" | "generated";
   sourceId: string;
   alt: string;
   photographer: string;
@@ -113,6 +119,46 @@ export const media: Record<MediaKey, Media> = {
     alt: "An engineer connecting network cables in a server rack",
     photographer: "Field Engineer",
     page: "https://www.pexels.com/photo/electronics-engineer-fixing-cables-on-server-442150/",
+  },
+  genDevelopers: {
+    key: "genDevelopers",
+    source: "generated",
+    sourceId: "sf-gen-developers",
+    alt: "Illustration: two developers reviewing code and dashboards on large monitors",
+    photographer: "Syntax Flow (AI-generated, supplied by the owner)",
+    page: "",
+  },
+  genCloud: {
+    key: "genCloud",
+    source: "generated",
+    sourceId: "sf-gen-cloud",
+    alt: "Illustration: two engineers planning a cloud architecture beside a data center",
+    photographer: "Syntax Flow (AI-generated, supplied by the owner)",
+    page: "",
+  },
+  genTeam: {
+    key: "genTeam",
+    source: "generated",
+    sourceId: "sf-gen-team",
+    alt: "Illustration: a team around a laptop with a Discover, Design, Build, Deploy, Scale delivery flow",
+    photographer: "Syntax Flow (AI-generated, supplied by the owner)",
+    page: "",
+  },
+  genCapabilities: {
+    key: "genCapabilities",
+    source: "generated",
+    sourceId: "sf-gen-capabilities",
+    alt: "Illustration: panels for technology solutions, talent intelligence, AI and automation, digital transformation, and cloud and infrastructure",
+    photographer: "Syntax Flow (AI-generated, supplied by the owner)",
+    page: "",
+  },
+  genBanner: {
+    key: "genBanner",
+    source: "generated",
+    sourceId: "sf-gen-banner",
+    alt: "Illustration: the Syntax Flow mascot beside panels for talent solutions, AI and automation, cloud and infrastructure, digital transformation, product and engineering, and consulting",
+    photographer: "Syntax Flow (AI-generated, supplied by the owner)",
+    page: "",
   },
 };
 

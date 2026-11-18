@@ -62,6 +62,10 @@ export function PhotoFrame({
           className="object-cover"
         />
       </div>
+      {meta.source === "generated" ? (
+        // Generated artwork is labelled, so no one mistakes it for a photo of real people or offices.
+        <span className="absolute bottom-3 left-3 rounded-full bg-ink-950/70 px-2.5 py-1 font-mono text-[0.6rem] tracking-[0.14em] text-white uppercase">Illustration</span>
+      ) : null}
     </figure>
   );
 }

@@ -60,7 +60,7 @@ export default function CareersPage() {
 
       <Section tone="white" aria-label="Life in technology" className="pt-0 sm:pt-0 lg:pt-0">
         <Container>
-          <PhotoFrame name="office" fallback="talent" className="aspect-[21/9] w-full max-sm:aspect-[4/3]" sizes="(min-width: 1280px) 1200px, 100vw" />
+          <PhotoFrame name="genDevelopers" fallback="talent" className="aspect-[21/9] w-full max-sm:aspect-[4/3]" sizes="(min-width: 1280px) 1200px, 100vw" />
         </Container>
       </Section>
 

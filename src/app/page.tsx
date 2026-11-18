@@ -96,7 +96,11 @@ export default function HomePage() {
       </section>
 
       {/* WHAT WE DO: IT services, IT consulting, IT recruitment */}
-      <ServicePillars id="home-what" tone="white" />
+      <ServicePillars
+        id="home-what"
+        tone="white"
+        image={<PhotoFrame name="genBanner" fallback="transformation" className="aspect-[3/1] w-full max-sm:aspect-[16/9]" sizes="(min-width: 1280px) 1200px, 100vw" parallax={false} />}
+      />
 
       {/* STATEMENT */}
       <Section aria-label="What we believe">
